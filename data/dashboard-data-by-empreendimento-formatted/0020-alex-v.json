@@ -1,0 +1,137 @@
+{
+  "empreendimento": {
+    "name": "Alex V"
+  },
+  "index": 20,
+  "generatedAt": "2026-04-30T11:56:13.174Z",
+  "templatesUsed": 1,
+  "formattedResults": [
+    {
+      "templateIndex": 0,
+      "statusCode": 200,
+      "descriptor": {
+        "selectMap": {
+          "M0": "Min(SEL DimTipoLeilao.DscTipoLeilao)"
+        },
+        "rawSelect": [
+          {
+            "Kind": 2,
+            "Value": "M0",
+            "Name": "Min(SEL DimTipoLeilao.DscTipoLeilao)"
+          }
+        ]
+      },
+      "warnings": [
+        {
+          "code": "IgnoredDataReductionAlgorithm",
+          "severity": "Warning",
+          "message": "A data reduction algorithm was specified but the corresponding grouping does not exist. The data reduction will be ignored for primary, secondary, intersection and scoped."
+        }
+      ],
+      "meaningfulRows": [
+        {
+          "Min(SEL DimTipoLeilao.DscTipoLeilao)": "A-4"
+        }
+      ],
+      "raw": {
+        "results": [
+          {
+            "jobId": "0",
+            "fromCache": false,
+            "result": {
+              "data": {
+                "timestamp": "/Date(1777550173940)/",
+                "rootActivityId": "9301f986-b8c8-4f59-ba9c-f18b8a6d0c49",
+                "descriptor": {
+                  "Select": [
+                    {
+                      "Kind": 2,
+                      "Value": "M0",
+                      "Name": "Min(SEL DimTipoLeilao.DscTipoLeilao)"
+                    }
+                  ],
+                  "Version": 2
+                },
+                "dsr": {
+                  "Version": 2,
+                  "MinorVersion": 1,
+                  "DS": [
+                    {
+                      "N": "DS0",
+                      "PH": [
+                        {
+                          "DM0": [
+                            {
+                              "S": [
+                                {
+                                  "N": "M0",
+                                  "T": 1
+                                }
+                              ],
+                              "M0": "A-4"
+                            }
+                          ]
+                        }
+                      ],
+                      "IC": true,
+                      "HAD": true,
+                      "Msg": [
+                        {
+                          "Code": "IgnoredDataReductionAlgorithm",
+                          "Severity": "Warning",
+                          "Message": "A data reduction algorithm was specified but the corresponding grouping does not exist. The data reduction will be ignored for primary, secondary, intersection and scoped."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "metrics": {
+                  "Version": "1.0.0",
+                  "Events": [
+                    {
+                      "Id": "e587d0aa-12ed-4c4d-9b2a-9f2d5bc19064",
+                      "Name": "Execute Semantic Query",
+                      "Component": "DSE",
+                      "Start": "2026-04-30T11:56:13.9408331Z",
+                      "End": "2026-04-30T11:56:14.0033618Z"
+                    },
+                    {
+                      "Id": "691280dd-daed-430f-8015-0a2f01ad3c3d",
+                      "ParentId": "e587d0aa-12ed-4c4d-9b2a-9f2d5bc19064",
+                      "Name": "Execute DAX Query",
+                      "Component": "DSE",
+                      "Start": "2026-04-30T11:56:13.9563711Z",
+                      "End": "2026-04-30T11:56:14.0033618Z",
+                      "Metrics": {
+                        "RowCount": 1
+                      }
+                    },
+                    {
+                      "Id": "3D2B6DC8-A119-4B36-9380-69C40FD3D296",
+                      "ParentId": "691280dd-daed-430f-8015-0a2f01ad3c3d",
+                      "Name": "Execute Query",
+                      "Component": "AS",
+                      "Start": "2026-04-30T11:56:13.993Z",
+                      "End": "2026-04-30T11:56:14.007Z"
+                    },
+                    {
+                      "Id": "0E44649C-98C3-4704-B66B-E055E9555E1A",
+                      "ParentId": "3D2B6DC8-A119-4B36-9380-69C40FD3D296",
+                      "Name": "Serialize Rowset",
+                      "Component": "AS",
+                      "Start": "2026-04-30T11:56:14.003Z",
+                      "End": "2026-04-30T11:56:14.007Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "jobIds": [
+          "0"
+        ]
+      }
+    }
+  ]
+}

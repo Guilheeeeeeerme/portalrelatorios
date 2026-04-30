@@ -184,6 +184,34 @@ function extractValues(responseBody) {
         }
       }
     }
+    if (Array.isArray(node.C)) {
+      for (const row of node.C) {
+        if (Array.isArray(row) && row.length > 0) {
+          values.push(row[0]);
+        }
+      }
+    }
+    if (Array.isArray(node.RV)) {
+      for (const row of node.RV) {
+        if (Array.isArray(row) && row.length > 0) {
+          values.push(row[0]);
+        }
+      }
+    }
+    if (Array.isArray(node.V)) {
+      for (const row of node.V) {
+        if (Array.isArray(row) && row.length > 0) {
+          values.push(row[0]);
+        }
+      }
+    }
+    if (Array.isArray(node.DM0)) {
+      for (const row of node.DM0) {
+        if (row && typeof row === "object" && typeof row.G0 === "string") {
+          values.push(row.G0);
+        }
+      }
+    }
   });
   return values;
 }
@@ -198,13 +226,20 @@ function extractNextRestartToken(responseBody) {
         }
       }
     }
+    if (Array.isArray(node.RT)) {
+      for (const tokenEntry of node.RT) {
+        if (Array.isArray(tokenEntry) && typeof tokenEntry[0] === "string" && tokenEntry[0]) {
+          latest = tokenEntry[0];
+        }
+      }
+    }
   });
   return latest;
 }
 
 async function main() {
   requireEnv();
-  const dataVolume = Number(process.env.PBI_DATA_VOLUME || 500);
+  const dataVolume = Number(process.env.PBI_DATA_VOLUME || 3);
   const skFonteEnergia = process.env.PBI_SK_FONTE_ENERGIA || "0D";
   const skUsinaLeilao = process.env.PBI_SK_USINA_LEILAO || "0D";
   const outputFile = process.env.PBI_OUTPUT_FILE || "data/empreendimentos.json";
@@ -220,6 +255,13 @@ async function main() {
 
     if (response.statusCode >= 400) {
       throw new Error(`Upstream failed (${response.statusCode}): ${JSON.stringify(response.body)}`);
+    }
+
+    if (page === 1 && process.env.PBI_DEBUG_CAPTURE === "true") {
+      const debugFile = path.resolve("data/debug-first-response.json");
+      await mkdir(path.dirname(debugFile), { recursive: true });
+      await writeFile(debugFile, `${JSON.stringify(response.body, null, 2)}\n`, "utf-8");
+      console.log(`Debug: saved first response to ${debugFile}`);
     }
 
     const pageItems = extractValues(response.body).filter(Boolean);

@@ -1,0 +1,113 @@
+{
+  "empreendimento": {
+    "name": "Professora Heley de Abreu Silva Batista 1"
+  },
+  "index": 848,
+  "generatedAt": "2026-04-30T11:58:00.280Z",
+  "templatesUsed": 1,
+  "results": [
+    {
+      "templateIndex": 0,
+      "statusCode": 200,
+      "response": {
+        "results": [
+          {
+            "jobId": "0",
+            "fromCache": false,
+            "result": {
+              "data": {
+                "timestamp": "/Date(1777550281317)/",
+                "rootActivityId": "0dc61f4f-ba8d-4e15-b4dc-676c00d13893",
+                "descriptor": {
+                  "Select": [
+                    {
+                      "Kind": 2,
+                      "Value": "M0",
+                      "Name": "Min(SEL DimTipoLeilao.DscTipoLeilao)"
+                    }
+                  ],
+                  "Version": 2
+                },
+                "dsr": {
+                  "Version": 2,
+                  "MinorVersion": 1,
+                  "DS": [
+                    {
+                      "N": "DS0",
+                      "PH": [
+                        {
+                          "DM0": [
+                            {
+                              "S": [
+                                {
+                                  "N": "M0",
+                                  "T": 1
+                                }
+                              ],
+                              "M0": "A-5"
+                            }
+                          ]
+                        }
+                      ],
+                      "IC": true,
+                      "HAD": true,
+                      "Msg": [
+                        {
+                          "Code": "IgnoredDataReductionAlgorithm",
+                          "Severity": "Warning",
+                          "Message": "A data reduction algorithm was specified but the corresponding grouping does not exist. The data reduction will be ignored for primary, secondary, intersection and scoped."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "metrics": {
+                  "Version": "1.0.0",
+                  "Events": [
+                    {
+                      "Id": "65f9d5ff-b837-48f8-8012-68f1275bc154",
+                      "Name": "Execute Semantic Query",
+                      "Component": "DSE",
+                      "Start": "2026-04-30T11:58:01.3179704Z",
+                      "End": "2026-04-30T11:58:01.3649304Z"
+                    },
+                    {
+                      "Id": "d2bb11e4-9d61-4464-889e-96494cc760be",
+                      "ParentId": "65f9d5ff-b837-48f8-8012-68f1275bc154",
+                      "Name": "Execute DAX Query",
+                      "Component": "DSE",
+                      "Start": "2026-04-30T11:58:01.3179704Z",
+                      "End": "2026-04-30T11:58:01.3493042Z",
+                      "Metrics": {
+                        "RowCount": 1
+                      }
+                    },
+                    {
+                      "Id": "3701EC18-3E12-492A-8A61-355D8C268D51",
+                      "ParentId": "d2bb11e4-9d61-4464-889e-96494cc760be",
+                      "Name": "Execute Query",
+                      "Component": "AS",
+                      "Start": "2026-04-30T11:58:01.347Z",
+                      "End": "2026-04-30T11:58:01.357Z"
+                    },
+                    {
+                      "Id": "FD6BA923-463F-471A-AF6F-EC79653DD10C",
+                      "ParentId": "3701EC18-3E12-492A-8A61-355D8C268D51",
+                      "Name": "Serialize Rowset",
+                      "Component": "AS",
+                      "Start": "2026-04-30T11:58:01.357Z",
+                      "End": "2026-04-30T11:58:01.357Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "jobIds": [
+          "0"
+        ]
+      }
+    }
+  ]
+}

@@ -7,7 +7,13 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "dump:empreendimentos": "node scripts/dump-empreendimentos.js",
-    "pw:bootstrap": "node scripts/playwright-bootstrap.js"
+    "pw:bootstrap": "node scripts/playwright-bootstrap.js",
+    "pw:capture-templates": "node scripts/capture-dashboard-templates.js",
+    "dump:empreendimento-data": "node scripts/dump-dashboard-data.js",
+    "format:empreendimento-data": "node scripts/format-dashboard-data.js",
+    "full:empreendimento-data": "npm run dump:empreendimento-data && npm run format:empreendimento-data",
+    "dump:dashboard-data": "node scripts/dump-dashboard-data.js",
+    "format:dashboard-data": "node scripts/format-dashboard-data.js"
   },
   "keywords": [
     "powerbi",

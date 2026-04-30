@@ -1,0 +1,113 @@
+{
+  "empreendimento": {
+    "name": "Sertão Solar Barreiras III"
+  },
+  "index": 1046,
+  "generatedAt": "2026-04-30T11:58:24.718Z",
+  "templatesUsed": 1,
+  "results": [
+    {
+      "templateIndex": 0,
+      "statusCode": 200,
+      "response": {
+        "results": [
+          {
+            "jobId": "0",
+            "fromCache": false,
+            "result": {
+              "data": {
+                "timestamp": "/Date(1777550305442)/",
+                "rootActivityId": "230f3c93-16af-4cf1-9adc-3989cac0f4f1",
+                "descriptor": {
+                  "Select": [
+                    {
+                      "Kind": 2,
+                      "Value": "M0",
+                      "Name": "Min(SEL DimTipoLeilao.DscTipoLeilao)"
+                    }
+                  ],
+                  "Version": 2
+                },
+                "dsr": {
+                  "Version": 2,
+                  "MinorVersion": 1,
+                  "DS": [
+                    {
+                      "N": "DS0",
+                      "PH": [
+                        {
+                          "DM0": [
+                            {
+                              "S": [
+                                {
+                                  "N": "M0",
+                                  "T": 1
+                                }
+                              ],
+                              "M0": "A-4"
+                            }
+                          ]
+                        }
+                      ],
+                      "IC": true,
+                      "HAD": true,
+                      "Msg": [
+                        {
+                          "Code": "IgnoredDataReductionAlgorithm",
+                          "Severity": "Warning",
+                          "Message": "A data reduction algorithm was specified but the corresponding grouping does not exist. The data reduction will be ignored for primary, secondary, intersection and scoped."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "metrics": {
+                  "Version": "1.0.0",
+                  "Events": [
+                    {
+                      "Id": "4b446db5-7bf5-47dd-bdef-10fcba2371fc",
+                      "Name": "Execute Semantic Query",
+                      "Component": "DSE",
+                      "Start": "2026-04-30T11:58:25.4425088Z",
+                      "End": "2026-04-30T11:58:25.473759Z"
+                    },
+                    {
+                      "Id": "c13b36d2-00df-4ecd-b3f3-d772285f2c35",
+                      "ParentId": "4b446db5-7bf5-47dd-bdef-10fcba2371fc",
+                      "Name": "Execute DAX Query",
+                      "Component": "DSE",
+                      "Start": "2026-04-30T11:58:25.4425088Z",
+                      "End": "2026-04-30T11:58:25.473759Z",
+                      "Metrics": {
+                        "RowCount": 1
+                      }
+                    },
+                    {
+                      "Id": "7622F6A3-BAF8-4AC2-9152-6BCB19358367",
+                      "ParentId": "c13b36d2-00df-4ecd-b3f3-d772285f2c35",
+                      "Name": "Execute Query",
+                      "Component": "AS",
+                      "Start": "2026-04-30T11:58:25.47Z",
+                      "End": "2026-04-30T11:58:25.48Z"
+                    },
+                    {
+                      "Id": "9F14FF11-1962-40D1-A8C0-8DF0547B3F02",
+                      "ParentId": "7622F6A3-BAF8-4AC2-9152-6BCB19358367",
+                      "Name": "Serialize Rowset",
+                      "Component": "AS",
+                      "Start": "2026-04-30T11:58:25.477Z",
+                      "End": "2026-04-30T11:58:25.48Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "jobIds": [
+          "0"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "empreendimento": {
+    "name": "MC2 Joinville"
+  },
+  "index": 657,
+  "generatedAt": "2026-04-30T11:57:39.045Z",
+  "templatesUsed": 1,
+  "results": [
+    {
+      "templateIndex": 0,
+      "statusCode": 200,
+      "response": {
+        "results": [
+          {
+            "jobId": "0",
+            "fromCache": false,
+            "result": {
+              "data": {
+                "timestamp": "/Date(1777550259275)/",
+                "rootActivityId": "77a04b0d-6622-4170-9ae9-b34ad09f74f0",
+                "descriptor": {
+                  "Select": [
+                    {
+                      "Kind": 2,
+                      "Value": "M0",
+                      "Name": "Min(SEL DimTipoLeilao.DscTipoLeilao)"
+                    }
+                  ],
+                  "Version": 2
+                },
+                "dsr": {
+                  "Version": 2,
+                  "MinorVersion": 1,
+                  "DS": [
+                    {
+                      "N": "DS0",
+                      "PH": [
+                        {
+                          "DM0": [
+                            {
+                              "S": [
+                                {
+                                  "N": "M0",
+                                  "T": 1
+                                }
+                              ],
+                              "M0": "A-5"
+                            }
+                          ]
+                        }
+                      ],
+                      "IC": true,
+                      "HAD": true,
+                      "Msg": [
+                        {
+                          "Code": "IgnoredDataReductionAlgorithm",
+                          "Severity": "Warning",
+                          "Message": "A data reduction algorithm was specified but the corresponding grouping does not exist. The data reduction will be ignored for primary, secondary, intersection and scoped."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "metrics": {
+                  "Version": "1.0.0",
+                  "Events": [
+                    {
+                      "Id": "a2afad55-7d18-495b-8a3f-ea3ccf712fb9",
+                      "Name": "Execute Semantic Query",
+                      "Component": "DSE",
+                      "Start": "2026-04-30T11:57:39.2753586Z",
+                      "End": "2026-04-30T11:57:39.3224273Z"
+                    },
+                    {
+                      "Id": "f66eeb04-64fa-41dd-9225-bebdb66ab6ca",
+                      "ParentId": "a2afad55-7d18-495b-8a3f-ea3ccf712fb9",
+                      "Name": "Execute DAX Query",
+                      "Component": "DSE",
+                      "Start": "2026-04-30T11:57:39.2753586Z",
+                      "End": "2026-04-30T11:57:39.3224273Z",
+                      "Metrics": {
+                        "RowCount": 1
+                      }
+                    },
+                    {
+                      "Id": "EA59F21D-C919-4655-B33B-052548D43B47",
+                      "ParentId": "f66eeb04-64fa-41dd-9225-bebdb66ab6ca",
+                      "Name": "Execute Query",
+                      "Component": "AS",
+                      "Start": "2026-04-30T11:57:39.313Z",
+                      "End": "2026-04-30T11:57:39.32Z"
+                    },
+                    {
+                      "Id": "AB826677-3FE4-467E-BF82-340D6D32D7BA",
+                      "ParentId": "EA59F21D-C919-4655-B33B-052548D43B47",
+                      "Name": "Serialize Rowset",
+                      "Component": "AS",
+                      "Start": "2026-04-30T11:57:39.32Z",
+                      "End": "2026-04-30T11:57:39.32Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "jobIds": [
+          "0"
+        ]
+      }
+    }
+  ]
+}
