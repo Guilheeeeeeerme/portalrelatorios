@@ -1,0 +1,11 @@
+---
+description: Portal Relatorios project rules
+alwaysApply: true
+---
+
+Follow `AGENTS.md`.
+
+- Keep the project scoped to `npm run dump:empreendimento-data`, `npm run format:empreendimento-data`, and `npm run full:empreendimento-data`.
+- Do not reintroduce removed Fastify API, Playwright capture, or standalone empreendimento-list dump tooling unless explicitly requested.
+- Preserve generated JSON data unless regeneration is part of the task.
+- Never commit real `.env` secrets.

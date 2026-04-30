@@ -53,10 +53,10 @@ function extractWarnings(ds = []) {
 
 async function main() {
   const inputDir = path.resolve(
-    process.env.PBI_DASHBOARD_OUTPUT_DIR || "data/dashboard-data-by-empreendimento",
+    process.env.PBI_EMPREENDIMENTO_OUTPUT_DIR || "data/empreendimento-data",
   );
   const outputDir = path.resolve(
-    process.env.PBI_FORMATTED_OUTPUT_DIR || "data/dashboard-data-by-empreendimento-formatted",
+    process.env.PBI_FORMATTED_OUTPUT_DIR || "data/empreendimento-data-formatted",
   );
   const sampleSize = Number(process.env.PBI_VALIDATE_SAMPLE_SIZE || 10);
 
@@ -122,7 +122,7 @@ async function main() {
   }
 
   summary.sampleComparisons = validationSample;
-  const summaryFile = path.resolve("data/dashboard-data-formatted-summary.json");
+  const summaryFile = path.resolve("data/empreendimento-data-formatted-summary.json");
   await writeFile(summaryFile, `${JSON.stringify(summary, null, 2)}\n`, "utf-8");
 
   console.log(`Formatted ${summary.formattedCount} files into ${outputDir}`);

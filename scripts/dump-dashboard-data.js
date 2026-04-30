@@ -111,9 +111,11 @@ async function main() {
   requireEnv();
 
   const empreFile = path.resolve(process.env.PBI_OUTPUT_FILE || "data/empreendimentos.json");
-  const templateFile = path.resolve(process.env.PBI_TEMPLATE_FILE || "data/dashboard-query-templates.json");
+  const templateFile = path.resolve(
+    process.env.PBI_TEMPLATE_FILE || "data/empreendimento-query-templates.json",
+  );
   const outputDir = path.resolve(
-    process.env.PBI_DASHBOARD_OUTPUT_DIR || "data/dashboard-data-by-empreendimento",
+    process.env.PBI_EMPREENDIMENTO_OUTPUT_DIR || "data/empreendimento-data",
   );
   const startAt = Number(process.env.PBI_START_INDEX || 0);
   const endAtEnv = process.env.PBI_END_INDEX;
@@ -128,7 +130,7 @@ async function main() {
       : [];
   const templates = Array.isArray(templateData.templates) ? templateData.templates : [];
   if (templates.length === 0) {
-    throw new Error("No templates found. Run: npm run pw:capture-templates");
+    throw new Error(`No templates found in ${templateFile}`);
   }
 
   const endAt = endAtEnv

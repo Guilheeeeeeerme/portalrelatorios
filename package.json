@@ -1,30 +1,20 @@
 {
   "name": "portalrelatorios",
   "version": "1.0.0",
-  "description": "Node.js wrapper for Power BI QueryExecutionService request",
-  "main": "src/server.js",
+  "description": "Power BI empreendimento data dump and formatter",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "node --watch src/server.js",
-    "dump:empreendimentos": "node scripts/dump-empreendimentos.js",
-    "pw:bootstrap": "node scripts/playwright-bootstrap.js",
-    "pw:capture-templates": "node scripts/capture-dashboard-templates.js",
     "dump:empreendimento-data": "node scripts/dump-dashboard-data.js",
     "format:empreendimento-data": "node scripts/format-dashboard-data.js",
-    "full:empreendimento-data": "npm run dump:empreendimento-data && npm run format:empreendimento-data",
-    "dump:dashboard-data": "node scripts/dump-dashboard-data.js",
-    "format:dashboard-data": "node scripts/format-dashboard-data.js"
+    "full:empreendimento-data": "npm run dump:empreendimento-data && npm run format:empreendimento-data"
   },
   "keywords": [
     "powerbi",
-    "fastify",
-    "wrapper"
+    "empreendimento",
+    "data"
   ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "fastify": "^4.28.1",
-    "playwright": "^1.59.1"
+    "dotenv": "^16.4.5"
   }
 }
