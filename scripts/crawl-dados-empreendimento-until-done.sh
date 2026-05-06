@@ -15,7 +15,7 @@ cd "$ROOT"
 
 RETRY_SEC="${CRAWL_RETRY_SECONDS:-90}"
 
-fixed=(--resume --fast --settle-ms=3000)
+fixed=(--resume --fast)
 extra=("$@")
 
 until npm run crawl:dados-empreendimento -- "${fixed[@]}" "${extra[@]}"; do
