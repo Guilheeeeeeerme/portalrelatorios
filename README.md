@@ -1,312 +1,637 @@
-# Portal Relatorios
+# Objetivo do Projeto
 
-Small Node.js utility for replaying captured Power BI query templates for each empreendimento and formatting the raw responses into meaningful JSON.
+Este projeto deve fazer apenas uma coisa:
 
-The repository is intentionally scoped to these commands:
+> Extrair dados estruturados dos relatórios do portal da ANEEL e salvar esses dados em JSON.
 
-```bash
-npm run dump:empreendimento-data
-npm run format:empreendimento-data
-npm run full:empreendimento-data
+Tudo que não estiver diretamente relacionado a esse objetivo pode ser removido, ignorado ou simplificado.
+
+A solução inicial deve funcionar como um crawler visual usando Playwright, mas também deve investigar se existe uma API interna reutilizável para substituir ou complementar o crawler no futuro.
+
+---
+
+# Contexto
+
+O portal possui múltiplas páginas, relatórios e filtros.
+
+Por isso, a arquitetura deve ser organizada por:
+
+```txt
+pagina
+↓
+relatorio
+↓
+filtro
+↓
+opcao do filtro
+↓
+dados extraidos
 ```
 
-## Prerequisites
+Essa divisão é importante porque futuramente podemos precisar adicionar novos relatórios do mesmo site sem reescrever tudo.
 
-1. Node.js and npm installed.
+Exemplo inicial:
 
-```bash
-node --version
-npm --version
+```txt
+Página: Resultados de Leilões - Geração
+Relatório: Dados do Empreendimento
+Filtro: Empreendimento
+Opção do filtro: Abil
 ```
 
-2. A valid Power BI `MWCToken` value.
+Essa combinação deve gerar nomes previsíveis como:
 
-Use only the token value in `.env`. Do not include the `MWCToken ` prefix.
-
-3. The required input files already present in `data/`:
-
-- `data/empreendimentos.json`
-- `data/empreendimento-query-templates.json`
-
-## Step-by-Step Setup
-
-### Automatic Setup
-
-Run the setup script from the repository root:
-
-```bash
-bash scripts/setup.sh
+```txt
+resultados-leiloes-geracao/
+  dados-do-empreendimento/
+    by-empreendimento/
+      abil.json
 ```
 
-The script will:
+---
 
-- check that Node.js and npm are installed
-- run `npm install`
-- install Playwright Chromium browser files when `playwright` is listed in `package.json`
-- create `.env` from `.env.example` when needed
-- populate missing `.env` keys from `.env.example`
-- prompt for `PBI_TOKEN` if it is missing
-- validate the required JSON input files
-- check script syntax
+# Página Inicial
 
-You can also pass the token non-interactively:
+Abrir:
 
-```bash
-PBI_TOKEN=replace_with_current_token_value bash scripts/setup.sh
+```txt
+https://portalrelatorios.aneel.gov.br/resultadosLeiloes/leiloesGeracaoPortugues#
 ```
 
-If you want to prepare everything except the token prompt:
+Nome técnico da página:
 
-```bash
-SETUP_SKIP_TOKEN_PROMPT=1 bash scripts/setup.sh
+```txt
+resultados-leiloes-geracao
 ```
 
-If Playwright is listed in `package.json` but you are setting up in CI or offline and do not want browser files installed:
+---
 
-```bash
-SETUP_SKIP_PLAYWRIGHT=1 bash scripts/setup.sh
+# Relatório Inicial
+
+Selecionar o relatório:
+
+```txt
+Dados do Empreendimento
 ```
 
-### Manual Setup
+Nome técnico:
 
-1. Install dependencies.
-
-```bash
-npm install
+```txt
+dados-do-empreendimento
 ```
 
-2. If `playwright` is listed in `package.json`, install Chromium browser files.
+---
 
-```bash
-npx playwright install chromium
+# Filtro Inicial
+
+Usar o filtro:
+
+```txt
+Empreendimento
 ```
 
-3. Create the local environment file.
+Nome técnico:
 
-```bash
-cp .env.example .env
+```txt
+empreendimento
 ```
 
-4. Open `.env` and set `PBI_TOKEN`.
+Crawler técnico:
 
-```env
-PBI_TOKEN=replace_with_current_token_value
+```txt
+dados-do-empreendimento-by-empreendimento
 ```
 
-5. Confirm the default paths in `.env`.
+---
 
-```env
-PBI_OUTPUT_FILE=data/empreendimentos.json
-PBI_TEMPLATE_FILE=data/empreendimento-query-templates.json
-PBI_EMPREENDIMENTO_OUTPUT_DIR=data/empreendimento-data
-PBI_FORMATTED_OUTPUT_DIR=data/empreendimento-data-formatted
+# Regra de Naming
+
+Todos os nomes devem seguir:
+
+* lowercase
+* kebab-case para arquivos, pastas e scripts
+* snake_case para chaves JSON
+* sem acentos
+* sem espaços
+* sem caracteres especiais
+
+Exemplos:
+
+```txt
+Dados do Empreendimento
+→ dados-do-empreendimento
+
+Empreendimento
+→ empreendimento
+
+Dados do Empreendimento filtrado por Empreendimento
+→ dados-do-empreendimento-by-empreendimento
 ```
 
-6. Confirm the input files exist.
+---
 
-```bash
-test -f data/empreendimentos.json
-test -f data/empreendimento-query-templates.json
+# Estrutura Recomendada de Pastas
+
+```txt
+src/
+  pages/
+    resultados-leiloes-geracao/
+      reports/
+        dados-do-empreendimento/
+          crawlers/
+            by-empreendimento.ts
+          parsers/
+            visual-cards-parser.ts
+          schemas/
+            dados-do-empreendimento.schema.ts
+          samples/
+            abil.raw.json
+            abil.parsed.json
+
+data/
+  resultados-leiloes-geracao/
+    dados-do-empreendimento/
+      by-empreendimento/
+        abil.json
+
+research/
+  api-inspection/
+    resultados-leiloes-geracao/
+      dados-do-empreendimento/
+        network-samples/
+        endpoints.md
 ```
 
-7. Check script syntax.
+---
 
-```bash
-node --check scripts/dump-dashboard-data.js
-node --check scripts/format-dashboard-data.js
+# Estratégia Principal
+
+Use Playwright como crawler manual automatizado.
+
+O crawler deve:
+
+1. abrir a página
+2. selecionar o relatório
+3. identificar opções disponíveis no filtro
+4. iterar por cada opção do filtro
+5. aguardar a visualização carregar
+6. capturar os dados visuais
+7. converter para JSON
+8. salvar o resultado
+
+---
+
+# Estratégia Secundária: Inspeção da API
+
+Enquanto o crawler roda, também deve inspecionar a API.
+
+Monitore:
+
+* XHR
+* fetch
+* payloads
+* query params
+* headers relevantes
+* endpoints
+* responses
+* paginação
+* IDs internos
+* filtros enviados
+* formato dos dados retornados
+
+Mas essa investigação não deve bloquear o crawler visual.
+
+Prioridade:
+
+```txt
+1. Coletar dados via Playwright visual
+2. Em paralelo, descobrir API
+3. Depois, se possível, substituir parsing visual por API
 ```
 
-## Required Inputs
+---
 
-`data/empreendimentos.json` contains the list of empreendimentos to process.
+# Regra Importante
 
-Supported shapes:
+Mesmo que uma API seja encontrada, continue processando via crawler visual inicialmente.
+
+Só substitua o fluxo visual por API quando houver evidência suficiente de que:
+
+* a API retorna todos os campos necessários
+* os valores batem com a visualização
+* os filtros são reproduzíveis
+* a resposta é estável
+* não há campos calculados apenas no front-end
+
+---
+
+# Fluxo Inicial Detalhado
+
+Para o relatório:
+
+```txt
+Dados do Empreendimento
+```
+
+e para o filtro:
+
+```txt
+Empreendimento
+```
+
+executar:
+
+```txt
+for each empreendimento in filtroEmpreendimento:
+  selecionar empreendimento
+  aguardar carregamento
+  extrair cards visuais
+  converter cards para JSON
+  salvar em data/resultados-leiloes-geracao/dados-do-empreendimento/by-empreendimento/{empreendimento}.json
+```
+
+Exemplo:
+
+```txt
+Empreendimento: Abil
+
+Output:
+data/resultados-leiloes-geracao/dados-do-empreendimento/by-empreendimento/abil.json
+```
+
+---
+
+# Como Interpretar a Visualização
+
+A tela é formada por cards.
+
+Cada card geralmente tem:
+
+```txt
+ícone
+valor principal
+descrição do campo
+```
+
+Exemplo:
+
+```txt
+Abil
+Empreendimento
+```
+
+Significa:
+
+```txt
+campo = Empreendimento
+valor = Abil
+```
+
+No JSON:
 
 ```json
 {
-  "empreendimentos": [
+  "empreendimento": "Abil"
+}
+```
+
+---
+
+# O Que Ignorar
+
+Na extração visual, ignore:
+
+* ícones
+* cores
+* alinhamento
+* grid
+* largura dos cards
+* altura dos cards
+* espaçamento
+* fontes
+* decoração visual
+
+Extraia apenas:
+
+```txt
+campo -> valor
+```
+
+---
+
+# Normalização de Campos
+
+Converta descrições visuais para chaves JSON em snake_case.
+
+Exemplos:
+
+```txt
+Empreendimento -> empreendimento
+Vendedora -> vendedora
+Localidade -> localidade
+UF -> uf
+Fonte -> fonte
+Status -> status
+Potência (MW) -> potencia_mw
+Garantia Física(MWm) -> garantia_fisica_mwm
+Energia Vendida(MWm) -> energia_vendida_mwm
+Preço(R$/MWm) -> preco_rs_mwm
+Deságio(%) -> desagio_percentual
+Invest. Previsto(R$) -> investimento_previsto_rs
+Atual. IPCA(R$) -> atual_ipca_rs
+Leilão -> leilao
+Tipo Leilão -> tipo_leilao
+Data do Leilão -> data_leilao
+Data de Homologação -> data_homologacao
+Ato de Outorga -> ato_outorga
+Data de Outorga -> data_outorga
+Data Início Operação -> data_inicio_operacao
+```
+
+---
+
+# Conversão de Tipos
+
+## Texto
+
+```txt
+Abil -> "Abil"
+Renova Energia S.A. -> "Renova Energia S.A."
+BA -> "BA"
+LER -> "LER"
+```
+
+## Número
+
+```txt
+24 -> 24
+11.00 -> 11.00
+105.20 -> 105.20
+```
+
+## Percentual
+
+```txt
+10.08% -> 10.08
+```
+
+Usar a chave com sufixo:
+
+```json
+{
+  "desagio_percentual": 10.08
+}
+```
+
+## Datas
+
+Converter datas brasileiras:
+
+```txt
+23/08/2013
+```
+
+para ISO:
+
+```txt
+2013-08-23
+```
+
+## Valores abreviados com K
+
+Quando aparecer:
+
+```txt
+94,201K
+185,648K
+```
+
+preservar o valor original e também o valor normalizado.
+
+Exemplo:
+
+```json
+{
+  "investimento_previsto": {
+    "raw": "94,201K",
+    "value": 94201,
+    "unit": "R$"
+  }
+}
+```
+
+Não assuma multiplicação por mil sem confirmar a semântica do portal.
+
+---
+
+# Exemplo de Conversão Visual para JSON
+
+Visualização:
+
+```txt
+Abil
+Empreendimento
+
+Renova Energia S.A.
+Vendedora
+
+Caetité
+Localidade
+
+BA
+UF
+
+Eólica
+Fonte
+
+Operação
+Status
+
+24
+Potência (MW)
+
+11.00
+Garantia Física(MWm)
+
+11.00
+Energia Vendida(MWm)
+
+105.20
+Preço(R$/MWm)
+
+10.08%
+Deságio(%)
+
+94,201K
+Invest. Previsto(R$)
+
+185,648K
+Atual. IPCA(R$)
+
+5/2013
+Leilão
+
+LER
+Tipo Leilão
+
+23/08/2013
+Data do Leilão
+
+19/11/2013
+Data de Homologação
+
+Portaria MME nº 109
+Ato de Outorga
+
+19/03/2014
+Data de Outorga
+
+2/10/2022
+Data Início Operação
+```
+
+Resultado JSON recomendado:
+
+```json
+{
+  "metadata": {
+    "source_page": "resultados-leiloes-geracao",
+    "source_url": "https://portalrelatorios.aneel.gov.br/resultadosLeiloes/leiloesGeracaoPortugues#",
+    "report": "dados-do-empreendimento",
+    "filter": "empreendimento",
+    "filter_value": "Abil",
+    "extraction_method": "playwright-visual-crawler"
+  },
+  "data": {
+    "empreendimento": {
+      "nome": "Abil",
+      "vendedora": "Renova Energia S.A.",
+      "localidade": "Caetité",
+      "uf": "BA",
+      "fonte": "Eólica",
+      "status": "Operação"
+    },
+    "energia": {
+      "potencia_mw": 24,
+      "garantia_fisica_mwm": 11.0,
+      "energia_vendida_mwm": 11.0
+    },
+    "financeiro": {
+      "preco_rs_mwm": 105.2,
+      "desagio_percentual": 10.08,
+      "investimento_previsto_rs": {
+        "raw": "94,201K",
+        "value": 94201
+      },
+      "atual_ipca_rs": {
+        "raw": "185,648K",
+        "value": 185648
+      }
+    },
+    "leilao": {
+      "numero": "5/2013",
+      "tipo": "LER",
+      "data_leilao": "2013-08-23",
+      "data_homologacao": "2013-11-19"
+    },
+    "outorga": {
+      "ato": "Portaria MME nº 109",
+      "data_outorga": "2014-03-19",
+      "data_inicio_operacao": "2022-10-02"
+    }
+  },
+  "raw_cards": [
     {
-      "name": "Abil",
-      "skUsinaLeilao": "optional-value"
+      "label": "Empreendimento",
+      "value": "Abil"
+    },
+    {
+      "label": "Vendedora",
+      "value": "Renova Energia S.A."
+    },
+    {
+      "label": "Localidade",
+      "value": "Caetité"
     }
   ]
 }
 ```
 
-or:
+---
+
+# Requisitos de Qualidade
+
+Cada extração deve salvar:
+
+1. JSON final normalizado
+2. dados brutos extraídos dos cards
+3. screenshot opcional para auditoria
+4. logs do filtro utilizado
+5. evidências de API, se existirem
+
+---
+
+# Formato de Saída por Item
+
+Cada arquivo deve conter:
 
 ```json
 {
-  "items": ["Abil", "Acacia"]
+  "metadata": {},
+  "data": {},
+  "raw_cards": [],
+  "api_evidence": {}
 }
 ```
 
-`data/empreendimento-query-templates.json` must contain a `templates` array with captured Power BI query payloads.
+---
 
-Templates may use these placeholders:
+# Exemplo de Arquivo
 
-- `__SK_USINA_LEILAO__`
-- `__EMPREENDIMENTO__`
-- `__EMPREENDIMENTO_LITERAL__`
+Para:
 
-## Environment Reference
-
-Required Power BI connection variables:
-
-- `PBI_BASE_URL`
-- `PBI_CAPACITY_ID`
-- `PBI_WORKLOAD`
-- `PBI_SERVICE`
-- `PBI_VISIBILITY`
-- `PBI_TOKEN`
-
-Optional paths and run controls:
-
-- `PBI_OUTPUT_FILE`: defaults to `data/empreendimentos.json`
-- `PBI_TEMPLATE_FILE`: defaults to `data/empreendimento-query-templates.json`
-- `PBI_EMPREENDIMENTO_OUTPUT_DIR`: defaults to `data/empreendimento-data`
-- `PBI_FORMATTED_OUTPUT_DIR`: defaults to `data/empreendimento-data-formatted`
-- `PBI_START_INDEX`: defaults to `0`
-- `PBI_END_INDEX`: optional inclusive end index for chunked runs
-- `PBI_VALIDATE_SAMPLE_SIZE`: defaults to `10`
-
-## Execution
-
-### Option 1: Full Run
-
-Use this when the token is valid and you want to dump raw data and immediately format it.
-
-```bash
-npm run full:empreendimento-data
+```txt
+Página: Resultados de Leilões - Geração
+Relatório: Dados do Empreendimento
+Filtro: Empreendimento
+Valor: Abil
 ```
 
-This runs:
+Salvar em:
 
-```bash
-npm run dump:empreendimento-data
-npm run format:empreendimento-data
+```txt
+data/resultados-leiloes-geracao/dados-do-empreendimento/by-empreendimento/abil.json
 ```
 
-Outputs:
+---
 
-- Raw Power BI responses: `data/empreendimento-data/<index>-<slug>.json`
-- Formatted JSON: `data/empreendimento-data-formatted/<index>-<slug>.json`
-- Formatting summary: `data/empreendimento-data-formatted-summary.json`
+# Comportamento Esperado do Agente
 
-### Option 2: Dump Only
+O agente deve:
 
-Use this when you only want to call Power BI and save raw responses.
+* ser incremental
+* criar código pequeno e testável
+* evitar overengineering
+* manter o projeto focado
+* remover código morto
+* documentar decisões
+* não criar funcionalidades fora do escopo
+* não misturar relatórios diferentes
+* não misturar filtros diferentes
+* não sobrescrever dados sem necessidade
+* manter outputs previsíveis
 
-```bash
-npm run dump:empreendimento-data
-```
+---
 
-The command reads:
+# Definição de Pronto
 
-- `PBI_OUTPUT_FILE`
-- `PBI_TEMPLATE_FILE`
-- `PBI_START_INDEX`
-- `PBI_END_INDEX`
+A primeira versão estará pronta quando conseguir:
 
-It writes raw files to:
-
-```text
-data/empreendimento-data/
-```
-
-### Option 3: Format Only
-
-Use this when raw files already exist and you only want to regenerate formatted JSON.
-
-```bash
-npm run format:empreendimento-data
-```
-
-The command reads:
-
-```text
-data/empreendimento-data/
-```
-
-It writes:
-
-```text
-data/empreendimento-data-formatted/
-data/empreendimento-data-formatted-summary.json
-```
-
-## Chunked or Resumable Runs
-
-Use `PBI_START_INDEX` and `PBI_END_INDEX` in `.env` to process part of the list.
-
-Example: process items 0 through 99.
-
-```env
-PBI_START_INDEX=0
-PBI_END_INDEX=99
-```
-
-Then run:
-
-```bash
-npm run dump:empreendimento-data
-```
-
-Example: resume from item 100 and continue to the end.
-
-```env
-PBI_START_INDEX=100
-# PBI_END_INDEX=99
-```
-
-Then run:
-
-```bash
-npm run dump:empreendimento-data
-```
-
-After all chunks are dumped, format everything:
-
-```bash
-npm run format:empreendimento-data
-```
-
-## Validate the Result
-
-1. Check that raw files were created.
-
-```bash
-find data/empreendimento-data -name '*.json' | wc -l
-```
-
-2. Check that formatted files were created.
-
-```bash
-find data/empreendimento-data-formatted -name '*.json' | wc -l
-```
-
-3. Inspect the summary.
-
-```bash
-sed -n '1,120p' data/empreendimento-data-formatted-summary.json
-```
-
-4. Inspect one formatted file.
-
-```bash
-sed -n '1,160p' data/empreendimento-data-formatted/0000-abil.json
-```
-
-## Troubleshooting
-
-- `Missing required environment variables`: fill the missing values in `.env`.
-- `No templates found`: check `PBI_TEMPLATE_FILE` and confirm it contains a `templates` array.
-- `ENOENT` for `data/empreendimentos.json`: check `PBI_OUTPUT_FILE`.
-- HTTP errors in raw output: refresh `PBI_TOKEN` and rerun the affected chunk.
-- Unexpected formatted fields: inspect the matching raw file and the template descriptor returned by Power BI.
-
-## Notes
-
-- `npm run dump:empreendimento-data` and `npm run full:empreendimento-data` call the live Power BI endpoint.
-- `npm run format:empreendimento-data` is local-only and does not call Power BI.
-- Generated data can be large. Review JSON output intentionally before committing it.
+1. abrir o portal
+2. selecionar `Dados do Empreendimento`
+3. iterar opções do filtro `Empreendimento`
+4. extrair pelo menos o item `Abil`
+5. converter a visualização para JSON
+6. salvar arquivo com nome e pasta corretos
+7. registrar evidências básicas de network/API
+8. permitir extensão futura para outros relatórios e filtros
