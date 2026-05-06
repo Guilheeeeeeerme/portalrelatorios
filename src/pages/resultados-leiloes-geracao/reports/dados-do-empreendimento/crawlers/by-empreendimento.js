@@ -6,7 +6,7 @@
  *
  * CLI:
  *   node .../by-empreendimento.js [--only=Nome] [--max=N] [--force] [--screenshots]
- *   [--quiet] [--fast] [--settle-ms=N] [--resume]
+ *   [--quiet] [--fast] [--settle-ms=N] [--resume] [--refresh-options]
  */
 
 const fs = require("fs");
@@ -50,6 +50,7 @@ function parseArgs(argv) {
     quiet: false,
     settleMs: 6500,
     resume: false,
+    refreshOptions: false,
   };
   for (const a of argv.slice(2)) {
     if (a === "--force") out.force = true;
@@ -57,6 +58,7 @@ function parseArgs(argv) {
     else if (a === "--headed") out.headless = false;
     else if (a === "--quiet") out.quiet = true;
     else if (a === "--resume") out.resume = true;
+    else if (a === "--refresh-options") out.refreshOptions = true;
     else if (a === "--fast") out.settleMs = 4200;
     else if (a.startsWith("--only=")) out.only = a.slice("--only=".length).trim();
     else if (a.startsWith("--max="))
@@ -95,6 +97,9 @@ function defaultCrawlState() {
     last_completed_at: null,
     updated_at: null,
     options_count: null,
+    /** Full sorted Empreendimento labels; filled after a dropdown scan; reused with --resume. */
+    option_names: null,
+    option_names_captured_at: null,
   };
 }
 
@@ -276,8 +281,44 @@ async function main() {
     names = [args.only];
     log(`Single item mode: --only=${args.only} (--resume ignored)`, quiet);
   } else {
-    names = await collectOptionNames(frame, page, quiet);
-    writeCrawlState(statePath, { options_count: names.length });
+    const snap = readCrawlState(statePath);
+    let usedCached = false;
+
+    if (
+      args.resume &&
+      Array.isArray(snap.option_names) &&
+      snap.option_names.length > 0 &&
+      !args.refreshOptions
+    ) {
+      names = [...snap.option_names];
+      usedCached = true;
+      const last = snap.last_completed_name;
+      if (last && !names.includes(last)) {
+        log(
+          `Cached list (${names.length} options) has no last_completed “${last}”; rescanning dropdown…`,
+          quiet
+        );
+        usedCached = false;
+      } else {
+        log(
+          `Using cached Empreendimento list (${names.length} options, saved ${snap.option_names_captured_at ?? "?"}). This avoids the long dropdown scroll. Use --refresh-options to rescan.`,
+          quiet
+        );
+      }
+    }
+
+    if (args.refreshOptions) {
+      log("--refresh-options: scanning dropdown (ignoring cached option list)…", quiet);
+    }
+
+    if (!usedCached) {
+      names = await collectOptionNames(frame, page, quiet);
+      writeCrawlState(statePath, {
+        options_count: names.length,
+        option_names: names,
+        option_names_captured_at: new Date().toISOString(),
+      });
+    }
   }
 
   if (!args.only && args.resume) {

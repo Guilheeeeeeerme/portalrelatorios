@@ -1,0 +1,394 @@
+{
+  "metadata": {
+    "source_page": "resultados-leiloes-geracao",
+    "source_url": "https://portalrelatorios.aneel.gov.br/resultadosLeiloes/leiloesGeracaoPortugues#",
+    "report": "dados-do-empreendimento",
+    "filter": "empreendimento",
+    "filter_value": "Ado Popinhak",
+    "extraction_method": "playwright-visual-crawler",
+    "generated_at": "2026-05-06T00:56:27.449Z",
+    "crawl_log": "run_items=8\nempreendimento=Ado Popinhak\nslug=ado-popinhak"
+  },
+  "data": {
+    "empreendimento": {
+      "nome": "Ado Popinhak",
+      "vendedora": "Companhia Energética Canoas",
+      "localidade": "Curitibanos",
+      "uf": "SC",
+      "fonte": "Hidro",
+      "status": "Operação"
+    },
+    "energia": {
+      "potencia_mw": 19,
+      "garantia_fisica_mwm": 10.44,
+      "energia_vendida_mwm": 10.4
+    },
+    "financeiro": {
+      "preco_rs_mwm": 135.9,
+      "desagio_percentual": 5.62,
+      "investimento_previsto_rs": {
+        "raw": "99,699K",
+        "value": 99699
+      },
+      "atual_ipca_rs": {
+        "raw": "193,178K",
+        "value": 193178
+      }
+    },
+    "leilao": {
+      "numero": "10/2013",
+      "tipo": "A-5",
+      "data_leilao": "2013-12-13",
+      "data_homologacao": "2014-03-25"
+    },
+    "outorga": {
+      "ato": "Portaria MME nº 276",
+      "data_outorga": "2014-06-11",
+      "data_inicio_operacao": "2017-22-12"
+    }
+  },
+  "raw_cards": [
+    {
+      "label": "Empreendimento",
+      "value": "Ado Popinhak"
+    },
+    {
+      "label": "Vendedora",
+      "value": "Companhia Energética Canoas"
+    },
+    {
+      "label": "Localidade",
+      "value": "Curitibanos"
+    },
+    {
+      "label": "UF",
+      "value": "SC"
+    },
+    {
+      "label": "Fonte",
+      "value": "Hidro"
+    },
+    {
+      "label": "Status",
+      "value": "Operação"
+    },
+    {
+      "label": "Potência (MW)",
+      "value": "19"
+    },
+    {
+      "label": "Garantia Física(MWm)",
+      "value": "10.44"
+    },
+    {
+      "label": "Energia Vendida(MWm)",
+      "value": "10.40"
+    },
+    {
+      "label": "Preço(R$/MWm)",
+      "value": "135.90"
+    },
+    {
+      "label": "Deságio(%)",
+      "value": "5.62%"
+    },
+    {
+      "label": "Invest. Previsto(R$)",
+      "value": "99,699K"
+    },
+    {
+      "label": "Atual. IPCA(R$)",
+      "value": "193,178K"
+    },
+    {
+      "label": "Leilão",
+      "value": "10/2013"
+    },
+    {
+      "label": "Tipo Leilão",
+      "value": "A-5"
+    },
+    {
+      "label": "Data do Leilão",
+      "value": "13/12/2013"
+    },
+    {
+      "label": "Data de Homologação",
+      "value": "25/03/2014"
+    },
+    {
+      "label": "Ato de Outorga",
+      "value": "Portaria MME nº 276"
+    },
+    {
+      "label": "Data de Outorga",
+      "value": "11/06/2014"
+    },
+    {
+      "label": "Data Início Operação",
+      "value": "12/22/2017"
+    }
+  ],
+  "api_evidence": {
+    "query_requests": [
+      {
+        "at": "2026-05-06T00:56:01.833Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DataAtualizacao\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Data Atualização\"}},\"Function\":3},\"Name\":\"Min(DataAtualizacao.Data Atualização)\",\"NativeReferenceName\":\"Data Última Atualização\"}],\"Where\":[{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"CacheKey\":\"{\\\"Commands\\\":[{\\\"SemanticQueryDataShapeCommand\\\":{\\\"Query\\\":{\\\"Version\\\":2,\\\"From\\\":[{\\\"Name\\\":\\\"d\\\",\\\"Entity\\\":\\\"DataAtualizacao\\\",\\\"Type\\\":0},{\\\"Name\\\":\\\"s\\\""
+      },
+      {
+        "at": "2026-05-06T00:56:02.572Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimUsinaLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"NomEmpreendimento\"}},\"Function\":3},\"Name\":\"Min(SEL DimUsinaLeilao.NomEmpreendimento)\",\"NativeReferenceName\":\"Empreendimento\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":"
+      },
+      {
+        "at": "2026-05-06T00:56:02.573Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_MSR_Desagio\"},\"Name\":\"SEL FatLeilao.Desagio\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"CacheKey\":\"{\\\"Commands\\\":[{\\\"SemanticQueryDataShapeCommand\\\":{\\\"Query\\\":{\\\"Version\\\":2,\\\"From\\\":[{\\\"Name\\\":\\"
+      },
+      {
+        "at": "2026-05-06T00:56:02.573Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimFaseUsina\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"DscStatus Alterado\"}},\"Function\":4},\"Name\":\"Min(DimFaseUsina.DscColunaAlterada)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},"
+      },
+      {
+        "at": "2026-05-06T00:56:02.573Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimTempoDiariaFatLeilao\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"DatTempoDiaria\"}},\"Function\":3},\"Name\":\"Min(DimTempoDiariaFatLeilao.DatTempoDiaria)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetr"
+      },
+      {
+        "at": "2026-05-06T00:56:02.573Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimUsinaLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"NomLocalizacao1\"}},\"Function\":3},\"Name\":\"Min(SEL DimUsinaLeilao.NomLocalizacao1)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsK"
+      },
+      {
+        "at": "2026-05-06T00:56:02.573Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"InvestimentoPrevistoAtualizado\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.InvestimentoPrevistoAtualizado)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"CacheKey\":\"{\\\"Comma"
+      },
+      {
+        "at": "2026-05-06T00:56:02.573Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"MdaGarantiaFisicaSEL\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.MdaGarantiaFisicaSEL)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"CacheKey\":\"{\\\"Commands\\\":[{\\\"SemanticQu"
+      },
+      {
+        "at": "2026-05-06T00:56:02.575Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimOutorgaLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"DscOutorgaLeilao\"}},\"Function\":3},\"Name\":\"Min(SEL DimOutorgaLeilao.DscOutorgaLeilao)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMe"
+      },
+      {
+        "at": "2026-05-06T00:56:02.575Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimUsinaLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"SigUFPrincipal\"}},\"Function\":3},\"Name\":\"Min(SEL DimUsinaLeilao.SigUFPrincipal)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKin"
+      },
+      {
+        "at": "2026-05-06T00:56:02.575Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimTipoLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"NumLeilaoConvert\"}},\"Function\":3},\"Name\":\"Min(SEL DimTipoLeilao.NumLeilaoConvert)\",\"NativeReferenceName\":\"Leilão\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},"
+      },
+      {
+        "at": "2026-05-06T00:56:02.576Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"VlrEnergiaVendida\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.VlrEnergiaVendida)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"CacheKey\":\"{\\\"Commands\\\":[{\\\"SemanticQueryDat"
+      },
+      {
+        "at": "2026-05-06T00:56:02.576Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimTempoDiariaOutorga\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"DatTempoDiaria\"}},\"Function\":3},\"Name\":\"Min(DimTempoDiariaOutorga.DatTempoDiaria)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsK"
+      },
+      {
+        "at": "2026-05-06T00:56:02.576Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimGrupoEmpresa\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"DscGrupoEmpresa\"}},\"Function\":3},\"Name\":\"Min(SEL DimGrupoEmpresa.DscGrupoEmpresa)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetric"
+      },
+      {
+        "at": "2026-05-06T00:56:02.578Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"VlrInvestimentoPrevisto\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.VlrInvestimentoPrevisto)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"CacheKey\":\"{\\\"Commands\\\":[{\\\"Sema"
+      },
+      {
+        "at": "2026-05-06T00:56:02.578Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"MdaPotenciaSEL\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.MdaPotenciaSEL)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"CacheKey\":\"{\\\"Commands\\\":[{\\\"SemanticQueryDataShape"
+      },
+      {
+        "at": "2026-05-06T00:56:02.578Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimTempoDiariaHomologacao\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"DatTempoDiaria\"}},\"Function\":3},\"Name\":\"Min(DimTempoDiariaHomologacao.DatTempoDiaria)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"Execution"
+      },
+      {
+        "at": "2026-05-06T00:56:02.578Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"DscDetalhamentoFonteEnergia\"}},\"Function\":3},\"Name\":\"Min(SEL DimFonteEnergia.DscDetalhamentoFonteEnergia)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"CacheKey\":\"{\\\"Comma"
+      },
+      {
+        "at": "2026-05-06T00:56:02.578Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimTipoLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"DscTipoLeilao\"}},\"Function\":3},\"Name\":\"Min(SEL DimTipoLeilao.DscTipoLeilao)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1"
+      },
+      {
+        "at": "2026-05-06T00:56:02.578Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"VlrPrecoLeilao\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.VlrPrecoLeilao)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"CacheKey\":\"{\\\"Commands\\\":[{\\\"SemanticQueryDataShape"
+      },
+      {
+        "at": "2026-05-06T00:56:02.578Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimTempoDiariaFatLeilaoDatInicioOperacao\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"DatTempoDiaria\"}},\"Function\":3},\"Name\":\"Min(DimTempoDiariaFatLeilaoDatInicioOperacao.DatTempoDiaria)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top"
+      },
+      {
+        "at": "2026-05-06T00:56:02.716Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"},\"Name\":\"SEL FatLeilao._CLM_NomEmpreendimento\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Abil'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{\"Count\":30000}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"CacheKey\":\"{\\\"Commands\\\":[{\\\"SemanticQueryDataShapeCommand\\\":{\\\"Query\\\""
+      },
+      {
+        "at": "2026-05-06T00:56:14.368Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"},\"Name\":\"SEL FatLeilao._NomEmpreendimento\"}],\"Where\":[{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Window\":{}}},\"IncludeEmptyGroups\":true,\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"QueryId\":\"\",\"ApplicationContext\":{\"DatasetId\":\"6941fd63-f2b2-4d8c-90cd-646cd8a1b092\",\"Sources\":[{\"ReportId\":\"e99ede56-8b35-4ce0-b0a8-0dc8581c09ed\",\"VisualId\":\"114a86626c5b363f41e8\"}]}}],\"cancelQueries\":[],\"modelId\":10857323,\"userPr"
+      },
+      {
+        "at": "2026-05-06T00:56:19.756Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimUsinaLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"NomEmpreendimento\"}},\"Function\":3},\"Name\":\"Min(SEL DimUsinaLeilao.NomEmpreendimento)\",\"NativeReferenceName\":\"Empreendimento\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"P"
+      },
+      {
+        "at": "2026-05-06T00:56:19.757Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_MSR_Desagio\"},\"Name\":\"SEL FatLeilao.Desagio\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"QueryId\":\"\",\"ApplicationContext\":{\"DatasetId\":\"6941fd63-f2b2-4d8c-90cd-646cd8a1b092\",\"Sources\":[{\"Re"
+      },
+      {
+        "at": "2026-05-06T00:56:19.757Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimTempoDiariaFatLeilao\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"DatTempoDiaria\"}},\"Function\":3},\"Name\":\"Min(DimTempoDiariaFatLeilao.DatTempoDiaria)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"Execu"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimFaseUsina\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"DscStatus Alterado\"}},\"Function\":4},\"Name\":\"Min(DimFaseUsina.DscColunaAlterada)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimTempoDiariaOutorga\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"DatTempoDiaria\"}},\"Function\":3},\"Name\":\"Min(DimTempoDiariaOutorga.DatTempoDiaria)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"Execution"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimUsinaLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"NomLocalizacao1\"}},\"Function\":3},\"Name\":\"Min(SEL DimUsinaLeilao.NomLocalizacao1)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"Execution"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"InvestimentoPrevistoAtualizado\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.InvestimentoPrevistoAtualizado)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"QueryId\":\"\""
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"MdaGarantiaFisicaSEL\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.MdaGarantiaFisicaSEL)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"QueryId\":\"\",\"ApplicationContext"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimTempoDiariaHomologacao\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"DatTempoDiaria\"}},\"Function\":3},\"Name\":\"Min(DimTempoDiariaHomologacao.DatTempoDiaria)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"E"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimTempoDiariaFatLeilaoDatInicioOperacao\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"DatTempoDiaria\"}},\"Function\":3},\"Name\":\"Min(DimTempoDiariaFatLeilaoDatInicioOperacao.DatTempoDiaria)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primar"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimUsinaLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"SigUFPrincipal\"}},\"Function\":3},\"Name\":\"Min(SEL DimUsinaLeilao.SigUFPrincipal)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMe"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimTipoLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"NumLeilaoConvert\"}},\"Function\":3},\"Name\":\"Min(SEL DimTipoLeilao.NumLeilaoConvert)\",\"NativeReferenceName\":\"Leilão\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"To"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"VlrEnergiaVendida\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.VlrEnergiaVendida)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"QueryId\":\"\",\"ApplicationContext\":{\"Da"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimGrupoEmpresa\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"DscGrupoEmpresa\"}},\"Function\":3},\"Name\":\"Min(SEL DimGrupoEmpresa.DscGrupoEmpresa)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"Executi"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"VlrInvestimentoPrevisto\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.VlrInvestimentoPrevisto)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"QueryId\":\"\",\"ApplicationC"
+      },
+      {
+        "at": "2026-05-06T00:56:19.759Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"MdaPotenciaSEL\"}},\"Function\":0},\"Name\":\"Sum(SEL FatLeilao.MdaPotenciaSEL)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"QueryId\":\"\",\"ApplicationContext\":{\"DatasetI"
+      },
+      {
+        "at": "2026-05-06T00:56:19.760Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimOutorgaLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"DscOutorgaLeilao\"}},\"Function\":3},\"Name\":\"Min(SEL DimOutorgaLeilao.DscOutorgaLeilao)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"Exe"
+      },
+      {
+        "at": "2026-05-06T00:56:19.760Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"},\"Name\":\"SEL FatLeilao._CLM_NomEmpreendimento\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{\"Count\":30000}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"QueryId\":\"\",\"ApplicationContext\":{\"DatasetId\":\"6941fd63-f2b2-4d"
+      },
+      {
+        "at": "2026-05-06T00:56:19.760Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"DscDetalhamentoFonteEnergia\"}},\"Function\":3},\"Name\":\"Min(SEL DimFonteEnergia.DscDetalhamentoFonteEnergia)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetricsKind\":1}}]},\"QueryId\":\"\""
+      },
+      {
+        "at": "2026-05-06T00:56:19.760Z",
+        "method": "POST",
+        "url": "https://8457d0abf1ea4dd180beb110936c5752.pbidedicated.windows.net/webapi/capacities/8457d0ab-f1ea-4dd1-80be-b110936c5752/workloads/QES/QueryExecutionService/automatic/public/query",
+        "body_preview": "{\"version\":\"1.0.0\",\"queries\":[{\"Query\":{\"Commands\":[{\"SemanticQueryDataShapeCommand\":{\"Query\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"SEL DimTipoLeilao\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"SEL FatLeilao\",\"Type\":0},{\"Name\":\"s11\",\"Entity\":\"SEL DimFonteEnergia\",\"Type\":0},{\"Name\":\"s2\",\"Entity\":\"SEL DimUsinaLeilao Recurso\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"DscTipoLeilao\"}},\"Function\":3},\"Name\":\"Min(SEL DimTipoLeilao.DscTipoLeilao)\"}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"_CLM_NomEmpreendimento\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Ado Popinhak'\"}}]]}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s11\"}},\"Property\":\"SkFonteEnergia\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}},{\"Condition\":{\"Comparison\":{\"ComparisonKind\":1,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s2\"}},\"Property\":\"SkUsinaLeilao\"}},\"Right\":{\"Literal\":{\"Value\":\"0D\"}}}}}]},\"Binding\":{\"Primary\":{\"Groupings\":[{\"Projections\":[0]}]},\"DataReduction\":{\"DataVolume\":3,\"Primary\":{\"Top\":{}}},\"Version\":1},\"ExecutionMetric"
+      }
+    ]
+  }
+}

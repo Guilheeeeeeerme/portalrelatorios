@@ -6,8 +6,14 @@
 
   `npm run crawl:dados-empreendimento`
 
-- Optional flags: `--only=Nome`, `--max=N`, `--force`, `--screenshots`, `--headed`, `--quiet`, `--fast`, `--settle-ms=N`, `--resume`
-- Checkpoint file: `data/resultados-leiloes-geracao/dados-do-empreendimento/crawl-state.json` (created if missing; updated after each item / skip).
+- Overnight / self-healing (retries on failure, stops when crawl exits 0):
+
+  `npm run crawl:dados-empreendimento:until-done`
+
+  Optional: `CRAWL_RETRY_SECONDS=120 npm run crawl:dados-empreendimento:until-done -- --quiet`
+
+- Optional flags: `--only=Nome`, `--max=N`, `--force`, `--screenshots`, `--headed`, `--quiet`, `--fast`, `--settle-ms=N`, `--resume`, `--refresh-options`
+- Checkpoint file: `data/resultados-leiloes-geracao/dados-do-empreendimento/crawl-state.json` (created if missing; updated after each item / skip). It also stores `option_names` after a full dropdown scan so **`--resume` can skip the slow scroll**; use `--refresh-options` to rescan the slicer list.
 
 - Do not reintroduce a Fastify API or other unrelated servers unless the user asks.
 
