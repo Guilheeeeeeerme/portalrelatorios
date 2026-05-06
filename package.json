@@ -4,8 +4,10 @@
   "description": "Este projeto deve fazer apenas uma coisa:",
   "main": "index.js",
   "scripts": {
-    "crawl:dados-empreendimento": "bash scripts/crawl-dados-empreendimento-until-done.sh",
-    "crawl:dados-empreendimento:headed": "bash scripts/crawl-dados-empreendimento-until-done.sh --headed --fast"
+    "crawl:dados-empreendimento": "node src/pages/resultados-leiloes-geracao/reports/dados-do-empreendimento/crawlers/by-empreendimento.js --resume --fast",
+    "crawl:dados-empreendimento:headed": "node src/pages/resultados-leiloes-geracao/reports/dados-do-empreendimento/crawlers/by-empreendimento.js --headed --resume --fast",
+    "crawl:dados-empreendimento:retry": "bash scripts/crawl-dados-empreendimento-retry.sh",
+    "crawl:dados-empreendimento:retry:headed": "bash scripts/crawl-dados-empreendimento-retry.sh --headed"
   },
   "keywords": [],
   "author": "",

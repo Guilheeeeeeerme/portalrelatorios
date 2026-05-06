@@ -16,6 +16,7 @@ const fs = require("fs");
 const path = require("path");
 const { chromium } = require("playwright");
 const { parseVisualCardText } = require("../parsers/visual-cards-parser.js");
+const { KNOWN_LABELS } = require("../schemas/label-map.js");
 
 const SOURCE_PAGE = "resultados-leiloes-geracao";
 const SOURCE_URL =
@@ -35,6 +36,10 @@ function log(msg, quiet) {
   process.stdout.write(`[${ts()}] [dados-empreendimento] ${msg}\n`);
 }
 
+function errorMessage(err) {
+  return err instanceof Error ? err.message : String(err);
+}
+
 function slugify(name) {
   const s = String(name)
     .normalize("NFD")
@@ -45,6 +50,25 @@ function slugify(name) {
   return s || "item";
 }
 
+function sameEmpreendimento(a, b) {
+  const left = slugify(a);
+  const right = slugify(b);
+  if (left === right) return true;
+  const rawLeft = String(a ?? "");
+  const rawRight = String(b ?? "");
+  if (!rawLeft.includes("…") && !rawRight.includes("…")) return false;
+  const leftPrefix = slugify(rawLeft.replace(/…+$/u, ""));
+  const rightPrefix = slugify(rawRight.replace(/…+$/u, ""));
+  return (
+    (leftPrefix.length >= 12 && right.startsWith(leftPrefix)) ||
+    (rightPrefix.length >= 12 && left.startsWith(rightPrefix))
+  );
+}
+
+function usesEllipsis(value) {
+  return String(value ?? "").includes("…");
+}
+
 function parseArgs(argv) {
   const out = {
     only: null,
@@ -53,6 +77,7 @@ function parseArgs(argv) {
     screenshots: false,
     headless: true,
     quiet: false,
+    fast: false,
     settleMs: 6500,
     resume: false,
     refreshOptions: false,
@@ -68,8 +93,10 @@ function parseArgs(argv) {
     else if (a === "--refresh-options") out.refreshOptions = true;
     else if (a === "--dry-list") out.dryList = true;
     else if (a === "--allow-small-list") out.allowSmallList = true;
-    else if (a === "--fast") out.settleMs = 4200;
-    else if (a.startsWith("--only=")) out.only = a.slice("--only=".length).trim();
+    else if (a === "--fast") {
+      out.fast = true;
+      out.settleMs = 4200;
+    } else if (a.startsWith("--only=")) out.only = a.slice("--only=".length).trim();
     else if (a.startsWith("--max=")) {
       const n = Number.parseInt(a.slice("--max=".length), 10);
       if (Number.isFinite(n) && n >= 0) out.max = n;
@@ -102,6 +129,7 @@ function defaultCrawlState() {
     options_count: null,
     option_names: null,
     option_names_captured_at: null,
+    selection_failures: {},
   };
 }
 
@@ -143,6 +171,28 @@ function recordCrawlProgress(statePath, name, quiet) {
   log(`  checkpoint → ${path.relative(process.cwd(), statePath)} (last=${slug})`, quiet);
 }
 
+function recordSelectionFailure(statePath, name, reason, quiet) {
+  const prev = readCrawlState(statePath);
+  const slug = slugify(name);
+  const failures = prev.selection_failures ?? {};
+  writeCrawlState(statePath, {
+    selection_failures: {
+      ...failures,
+      [slug]: {
+        name,
+        reason,
+        failed_at: new Date().toISOString(),
+      },
+    },
+  });
+  log(`  selection failure quarantined → ${slug}: ${reason}`, quiet);
+}
+
+function failedOptionSlugs(statePath) {
+  const state = readCrawlState(statePath);
+  return new Set(Object.keys(state.selection_failures ?? {}));
+}
+
 /** Persist merged sorted labels; logs when the crawled set grows. */
 function mergeOptionNamesIntoState(statePath, discovered, quiet) {
   const prev = readCrawlState(statePath);
@@ -172,6 +222,17 @@ function screenshotsDir() {
   );
 }
 
+function debugDir() {
+  return path.join(
+    process.cwd(),
+    "research",
+    "api-inspection",
+    SOURCE_PAGE,
+    REPORT_ID,
+    "debug"
+  );
+}
+
 function jsonPathFor(outDir, name) {
   return path.join(outDir, `${slugify(name)}.json`);
 }
@@ -180,20 +241,39 @@ function jsonExists(outDir, name) {
   return fs.existsSync(jsonPathFor(outDir, name));
 }
 
-function pendingExtractions(discovered, outDir, force) {
+function pendingExtractions(discovered, outDir, force, statePath) {
+  const failed = force || !statePath ? new Set() : failedOptionSlugs(statePath);
   return [...discovered]
     .sort((a, b) => a.localeCompare(b, "pt-BR"))
-    .filter((n) => force || !jsonExists(outDir, n));
+    .filter((n) => (force || !jsonExists(outDir, n)) && !failed.has(slugify(n)));
+}
+
+function parsedCardLabels(parsed) {
+  return new Set((parsed.raw_cards ?? []).map((card) => card.label));
+}
+
+function missingCardLabels(parsed) {
+  const labels = parsedCardLabels(parsed);
+  return [...KNOWN_LABELS].filter((label) => !labels.has(label));
 }
 
 async function getPowerBiFrame(page) {
   const deadline = Date.now() + 90000;
   while (Date.now() < deadline) {
-    const f = page.frames().find((fr) => (fr.url() || "").includes("powerbi.com"));
-    if (f) return f;
+    const frames = page.frames().filter((fr) => (fr.url() || "").includes("powerbi.com"));
+    for (const f of frames) {
+      const text = await f
+        .locator("body")
+        .first()
+        .innerText({ timeout: 1000 })
+        .catch(() => "");
+      if (text.includes("Empreendimento") || text.includes("Dados por Empreendimento")) return f;
+      const hasSlicer = await f.locator(".visual-slicer").first().count().catch(() => 0);
+      if (hasSlicer > 0) return f;
+    }
     await page.waitForTimeout(250);
   }
-  throw new Error("Power BI iframe not found");
+  throw new Error("Power BI iframe/report content not found");
 }
 
 /**
@@ -252,6 +332,127 @@ function empreendimentoSlicerDropdown(frame) {
     .locator('[data-testid="slicer-dropdown"]');
 }
 
+function empreendimentoSlicer(frame) {
+  return frame
+    .locator(".visual-slicer")
+    .filter({ has: frame.locator('.slicer-header-text:text-is("Empreendimento")') })
+    .first();
+}
+
+async function findEmpreendimentoClickableHandle(frame) {
+  const handle = await frame.evaluateHandle(() => {
+    const textOf = (el) => (el.textContent || "").trim();
+    const headers = Array.from(document.querySelectorAll(".slicer-header-text"));
+    const header = headers.find((el) => textOf(el) === "Empreendimento");
+    const root = header ? header.closest(".visual-slicer") : null;
+    if (!root) return null;
+    return (
+      root.querySelector('[data-testid="slicer-dropdown"]') ||
+      root.querySelector('[role="combobox"]') ||
+      root.querySelector('[aria-haspopup="listbox"]') ||
+      root.querySelector(".slicer-dropdown") ||
+      root
+    );
+  });
+  const element = handle.asElement();
+  if (!element) await handle.dispose().catch(() => {});
+  return element;
+}
+
+async function clickEmpreendimentoDropdownInDom(frame) {
+  return frame.evaluate(() => {
+    const textOf = (el) => (el.textContent || "").trim();
+    const headers = Array.from(document.querySelectorAll(".slicer-header-text"));
+    const header = headers.find((el) => textOf(el) === "Empreendimento");
+    const root = header ? header.closest(".visual-slicer") : null;
+    if (!root) return false;
+    const target =
+      root.querySelector('[data-testid="slicer-dropdown"]') ||
+      root.querySelector('[role="combobox"]') ||
+      root.querySelector('[aria-haspopup="listbox"]') ||
+      root.querySelector(".slicer-dropdown") ||
+      root;
+    target.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
+    target.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true }));
+    target.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+    return true;
+  });
+}
+
+async function waitForListboxInDom(frame, timeout) {
+  await frame.waitForFunction(
+    () => {
+      const lb = document.querySelector('[role="listbox"]');
+      if (!lb) return false;
+      const box = lb.getBoundingClientRect();
+      return box.width > 0 && box.height > 0;
+    },
+    null,
+    { timeout }
+  );
+}
+
+async function isListboxVisibleInDom(frame) {
+  return frame
+    .evaluate(() => {
+      const lb = document.querySelector('[role="listbox"]');
+      if (!lb) return false;
+      const box = lb.getBoundingClientRect();
+      return box.width > 0 && box.height > 0;
+    })
+    .catch(() => false);
+}
+
+async function clickOptionInDom(frame, name) {
+  return frame.evaluate((targetName) => {
+    const normalize = (value) => (value || "").replace(/\s+/g, " ").trim();
+    const target = normalize(targetName);
+    const options = Array.from(document.querySelectorAll('[role="option"]'));
+    const option = options.find((el) => normalize(el.textContent) === target);
+    if (!option) return false;
+    const eventTarget =
+      option.querySelector(".slicerCheckbox") ||
+      option.querySelector(".slicerText") ||
+      option.firstElementChild ||
+      option;
+    eventTarget.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+    eventTarget.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
+    eventTarget.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, cancelable: true }));
+    eventTarget.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true }));
+    eventTarget.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+    return true;
+  }, name);
+}
+
+async function currentEmpreendimentoSlicerValue(frame) {
+  const bodyText = await frame.locator("body").first().innerText({ timeout: 5000 }).catch(() => "");
+  const lines = String(bodyText)
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const idx = lines.findIndex((line, i) => line === "Empreendimento" && lines[i + 1] !== "Vendedora");
+  return idx >= 0 ? lines[idx + 1] ?? "" : "";
+}
+
+async function selectionAppearsApplied(frame, name) {
+  const bodyText = await frame.locator("body").first().innerText({ timeout: 5000 }).catch(() => "");
+  const parsed = parseVisualCardText(bodyText, name);
+  if (!parsed.error && sameEmpreendimento(parsed.data?.empreendimento?.nome, name)) return true;
+  const slicerValue = await currentEmpreendimentoSlicerValue(frame);
+  return slicerValue !== "" && slicerValue !== "All";
+}
+
+async function clickFirstVisible(locator, timeout) {
+  const count = await locator.count().catch(() => 0);
+  for (let i = 0; i < count; i++) {
+    const item = locator.nth(i);
+    if (!(await item.isVisible().catch(() => false))) continue;
+    await item.click({ timeout });
+    return true;
+  }
+  return false;
+}
+
 async function tryClearSlicerSearch(frame, page) {
   for (const re of [/Search/i, /Buscar/i, /Filtrar/i, /search/i, /Find/i]) {
     const inp = frame.getByPlaceholder(re).first();
@@ -281,7 +482,7 @@ async function wheelOnLocator(locator, page, deltaY) {
 }
 
 async function mergeVisibleIntoDiscovered(frame, discovered) {
-  const texts = await frame.locator('[role="option"]').allTextContents();
+  const texts = await getVisibleOptionTexts(frame);
   let added = 0;
   for (const t of texts) {
     const s = t.trim();
@@ -294,16 +495,78 @@ async function mergeVisibleIntoDiscovered(frame, discovered) {
 }
 
 async function getVisibleOptionTexts(frame) {
-  const texts = await frame.locator('[role="option"]').allTextContents();
-  return texts.map((t) => t.trim()).filter(Boolean);
+  return frame.evaluate(() =>
+    Array.from(document.querySelectorAll('[role="option"]'))
+      .map((el) => (el.textContent || "").trim())
+      .filter(Boolean)
+  );
 }
 
-async function openEmpreendimentoDropdown(frame, page) {
+function visibleRangeLabel(visible) {
+  if (visible.length === 0) return "none visible";
+  return `visible="${visible[0]}" → "${visible[visible.length - 1]}" (${visible.length} rows)`;
+}
+
+async function openEmpreendimentoDropdown(frame, page, quiet) {
+  log("  opening Empreendimento dropdown…", quiet);
   await page.keyboard.press("Escape");
   await page.waitForTimeout(350);
-  const dd = empreendimentoSlicerDropdown(frame);
-  await dd.click();
-  await page.waitForTimeout(900);
+  const dd = empreendimentoSlicerDropdown(frame).first();
+  const slicer = empreendimentoSlicer(frame);
+
+  const attempts = [
+    async () => {
+      const clicked = await clickEmpreendimentoDropdownInDom(frame);
+      if (!clicked) throw new Error("Empreendimento slicer DOM node not found");
+    },
+    async () => {
+      const handle = await findEmpreendimentoClickableHandle(frame);
+      if (!handle) throw new Error("Empreendimento slicer DOM node not found");
+      await handle.click({ timeout: 7000 });
+      await handle.dispose().catch(() => {});
+    },
+    async () => dd.click({ timeout: 7000 }),
+    async () => dd.click({ timeout: 7000, force: true }),
+    async () =>
+      clickFirstVisible(
+        slicer.locator(
+          '[role="combobox"], [aria-haspopup="listbox"], [data-testid="slicer-dropdown"], .slicer-dropdown'
+        ),
+        5000
+      ),
+    async () => {
+      const box = await slicer.boundingBox();
+      if (!box) throw new Error("Empreendimento slicer has no bounding box");
+      await page.mouse.click(box.x + box.width - 28, box.y + Math.min(42, box.height / 2));
+    },
+  ];
+
+  const failures = [];
+  for (const [idx, attempt] of attempts.entries()) {
+    try {
+      log(`  dropdown open attempt ${idx + 1}/${attempts.length}…`, quiet);
+      const clicked = await attempt();
+      if (clicked === false) {
+        failures.push("no visible dropdown candidate");
+        continue;
+      }
+      await waitForListboxInDom(frame, 8000);
+      await page.waitForTimeout(350);
+      log(`  dropdown open attempt ${idx + 1} succeeded.`, quiet);
+      return;
+    } catch (err) {
+      failures.push(errorMessage(err).split("\n")[0]);
+      await page.keyboard.press("Escape").catch(() => {});
+      await page.waitForTimeout(250);
+    }
+  }
+
+  throw new Error(`Unable to open Empreendimento slicer dropdown: ${failures.join(" | ")}`);
+}
+
+async function ensureEmpreendimentoDropdownOpen(frame, page, quiet) {
+  if (await isListboxVisibleInDom(frame)) return;
+  await openEmpreendimentoDropdown(frame, page, quiet);
 }
 
 async function ensureListboxFocused(frame, page) {
@@ -331,7 +594,7 @@ async function scrollListboxStep(lb, page, tick) {
 }
 
 async function reopenDropdownFromTop(frame, page, quiet) {
-  await openEmpreendimentoDropdown(frame, page);
+  await openEmpreendimentoDropdown(frame, page, quiet);
   await tryClearSlicerSearch(frame, page);
   const lb = await ensureListboxFocused(frame, page);
   if (lb) {
@@ -342,16 +605,83 @@ async function reopenDropdownFromTop(frame, page, quiet) {
 }
 
 async function selectEmpreendimento(frame, page, name, settleMs) {
-  await page.keyboard.press("Escape");
-  await page.waitForTimeout(350);
-  const dd = empreendimentoSlicerDropdown(frame);
-  await dd.click();
-  await page.waitForTimeout(900);
-  const opt = frame.getByRole("option", { name, exact: true });
-  await opt.click();
-  await page.waitForTimeout(settleMs);
-  await page.keyboard.press("Escape");
-  await page.waitForTimeout(450);
+  await ensureEmpreendimentoDropdownOpen(frame, page);
+
+  const option = frame.getByRole("option", { name, exact: true }).first();
+  await option.waitFor({ state: "visible", timeout: 5000 });
+  const attempts = [
+    async () => option.click({ timeout: 7000 }),
+    async () => {
+      await option.focus({ timeout: 5000 });
+      await page.keyboard.press("Space");
+    },
+    async () => {
+      await option.focus({ timeout: 5000 });
+      await page.keyboard.press("Enter");
+    },
+    async () => option.click({ timeout: 5000, force: true }),
+    async () => {
+      const clicked = await clickOptionInDom(frame, name);
+      if (!clicked) throw new Error(`DOM option not found: ${name}`);
+    },
+  ];
+
+  const failures = [];
+  for (const [idx, attempt] of attempts.entries()) {
+    try {
+      if (idx > 0) await ensureEmpreendimentoDropdownOpen(frame, page);
+      await attempt();
+      await page.waitForTimeout(900);
+      if (await selectionAppearsApplied(frame, name)) {
+        await page.waitForTimeout(settleMs);
+        await page.keyboard.press("Escape");
+        await page.waitForTimeout(450);
+        return;
+      }
+      failures.push(`attempt ${idx + 1} did not change slicer`);
+    } catch (err) {
+      failures.push(`attempt ${idx + 1}: ${errorMessage(err).split("\n")[0]}`);
+    }
+  }
+
+  throw new Error(`Visible option did not apply: ${name}; ${failures.join(" | ")}`);
+}
+
+async function waitForAccurateVisualCards(frame, page, name, quiet) {
+  const timeoutMs = Math.max(
+    5000,
+    Number.parseInt(process.env.CRAWL_VISUAL_READY_TIMEOUT_MS ?? "45000", 10) || 45000
+  );
+  const deadline = Date.now() + timeoutMs;
+  let lastReason = "not_checked";
+
+  while (Date.now() < deadline) {
+    const bodyText = await frame.locator("body").first().innerText();
+    const parsed = parseVisualCardText(bodyText, name);
+
+    if (parsed.error) {
+      lastReason = parsed.error;
+    } else {
+      const parsedName = parsed.data?.empreendimento?.nome;
+      const missing = missingCardLabels(parsed);
+      if (!sameEmpreendimento(parsedName, name)) {
+        lastReason = `selected_visual_mismatch expected="${name}" actual="${parsedName ?? ""}"`;
+      } else {
+        if (missing.length > 0) {
+          log(
+            `Visual cards for "${name}" are missing ${missing.length} label(s); writing available fields with parser nulls.`,
+            quiet
+          );
+        }
+        return parsed;
+      }
+    }
+
+    await page.waitForTimeout(500);
+  }
+
+  log(`Visual cards did not become accurate for "${name}": ${lastReason}`, quiet);
+  throw new Error(lastReason);
 }
 
 async function extractAndWrite({
@@ -371,19 +701,31 @@ async function extractAndWrite({
   const itemStart = Date.now();
   log(`[${index}${totalHint}] selecting “${name}”…`, quiet);
   await selectEmpreendimento(frame, page, name, args.settleMs);
+  log(
+    `[${index}${totalHint}] selected “${name}”; waiting for cards before writing ${path.relative(process.cwd(), dest)}`,
+    quiet
+  );
   log(`[${index}${totalHint}] extracting text + parsing (${Date.now() - itemStart}ms so far)…`, quiet);
-  const bodyText = await frame.locator("body").first().innerText();
-
-  const parsed = parseVisualCardText(bodyText, name);
-  if (parsed.error) {
-    const msg = `[${index}${totalHint}] Parse failed for “${name}” (${slug}): ${parsed.error}`;
+  const parsed = await waitForAccurateVisualCards(frame, page, name, quiet).catch(async (err) => {
+    const reason = err instanceof Error ? err.message : String(err);
+    const msg = `[${index}${totalHint}] Parse failed for “${name}” (${slug}): ${reason}`;
+    const dbgDir = debugDir();
+    fs.mkdirSync(dbgDir, { recursive: true });
+    const dbgPath = path.join(dbgDir, `${slug}.txt`);
+    const bodyText = await frame.locator("body").first().innerText({ timeout: 5000 }).catch(() => "");
+    fs.writeFileSync(dbgPath, `reason=${reason}\n\n${bodyText}`, "utf8");
     log(msg, quiet);
     console.error(msg);
+    console.error(`debug text: ${path.relative(process.cwd(), dbgPath)}`);
     console.error("(exit 1 — no JSON written, crawl-state.json not updated for this item)");
-    throw new Error(parsed.error);
-  }
+    throw err;
+  });
 
   log(`[${index}${totalHint}] parsed ${parsed.raw_cards?.length ?? 0} card row(s)`, quiet);
+
+  if (usesEllipsis(parsed.data?.empreendimento?.nome)) {
+    parsed.data.empreendimento.nome = name;
+  }
 
   const payload = {
     metadata: {
@@ -463,7 +805,8 @@ async function main() {
   const browser = await chromium.launch({ headless: args.headless });
   const context = await browser.newContext({ viewport: VIEWPORT });
   const page = await context.newPage();
-  page.setDefaultTimeout(180000);
+  page.setDefaultTimeout(30000);
+  page.setDefaultNavigationTimeout(120000);
 
   const frame = await openPortalAndReport(page, quiet, t0);
 
@@ -484,6 +827,7 @@ async function main() {
   let stagnation = 0;
   let reopenPass = 0;
   let scrollTick = 0;
+  let heartbeatTick = 0;
 
   try {
     if (args.only) {
@@ -516,39 +860,47 @@ async function main() {
       );
 
       while (processed < args.max) {
-        await openEmpreendimentoDropdown(frame, page);
+        await ensureEmpreendimentoDropdownOpen(frame, page, quiet);
         await tryClearSlicerSearch(frame, page);
+        log("  focusing Empreendimento listbox…", quiet);
         const lb = await ensureListboxFocused(frame, page);
         if (!lb) {
           console.error("Empreendimento slicer listbox not found.");
           process.exit(1);
         }
 
+        log("  reading visible Empreendimento options…", quiet);
         await mergeVisibleIntoDiscovered(frame, discovered);
         mergeOptionNamesIntoState(statePath, discovered, quiet);
+        let visible = await getVisibleOptionTexts(frame);
 
         if (!args.dryList) {
-          const visible = await getVisibleOptionTexts(frame);
           const visibleSet = new Set(visible);
-          const pendingSorted = pendingExtractions(discovered, out, args.force);
+          const pendingSorted = pendingExtractions(discovered, out, args.force, statePath);
           const next = pendingSorted.find((n) => visibleSet.has(n));
           if (next) {
-            await page.keyboard.press("Escape");
-            await page.waitForTimeout(280);
-            const rel = await extractAndWrite({
-              frame,
-              page,
-              name: next,
-              index: processed + 1,
-              totalHint: args.max !== Infinity ? `/${args.max}` : "",
-              args,
-              out,
-              statePath,
-              shotsRoot,
-              quiet,
-            });
-            summary.push(`wrote ${rel}`);
-            processed += 1;
+            log(`  next visible pending option: “${next}” (${pendingSorted.length} pending known).`, quiet);
+            try {
+              const rel = await extractAndWrite({
+                frame,
+                page,
+                name: next,
+                index: processed + 1,
+                totalHint: args.max !== Infinity ? `/${args.max}` : "",
+                args,
+                out,
+                statePath,
+                shotsRoot,
+                quiet,
+              });
+              summary.push(`wrote ${rel}`);
+              processed += 1;
+            } catch (err) {
+              const reason = errorMessage(err);
+              if (!reason.startsWith("Visible option did not apply:")) throw err;
+              recordSelectionFailure(statePath, next, reason, quiet);
+              summary.push(`skipped ${next}: ${reason}`);
+            }
             stagnation = 0;
             reopenPass = 0;
             continue;
@@ -561,16 +913,25 @@ async function main() {
         await page.waitForTimeout(args.fast ? 300 : 420);
         await mergeVisibleIntoDiscovered(frame, discovered);
         mergeOptionNamesIntoState(statePath, discovered, quiet);
-
-        await page.keyboard.press("Escape");
-        await page.waitForTimeout(280);
+        visible = await getVisibleOptionTexts(frame);
 
         if (discovered.size === sizeBefore) stagnation += 1;
         else stagnation = 0;
 
+        heartbeatTick += 1;
+        if (heartbeatTick % 10 === 0 || stagnation === STALE_LIMIT - 1) {
+          const pendingCount = args.dryList
+            ? "dry-list"
+            : `${pendingExtractions(discovered, out, args.force, statePath).length} pending`;
+          log(
+            `  discovery scroll ${scrollTick}: ${discovered.size} unique, ${pendingCount}, stagnation ${stagnation}/${STALE_LIMIT}, ${visibleRangeLabel(visible)}`,
+            quiet
+          );
+        }
+
         if (stagnation < STALE_LIMIT) continue;
 
-        const pending = pendingExtractions(discovered, out, args.force);
+        const pending = pendingExtractions(discovered, out, args.force, statePath);
 
         if (args.dryList) {
           if (reopenPass < MAX_REOPEN_PASSES) {

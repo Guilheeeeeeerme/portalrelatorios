@@ -2,13 +2,17 @@
 
 ## Scope
 
-- **Dados do Empreendimento** (Power BI embed) — only these npm scripts exist:
+- **Dados do Empreendimento** (Power BI embed) — these npm scripts exist:
 
-  **`npm run crawl:dados-empreendimento`** — zombie loop (headless): `--resume --fast --settle-ms=3000` on each pass; retries after **`CRAWL_RETRY_SECONDS`** (default `90`) until exit 0.
+  **`npm run crawl:dados-empreendimento`** — pure one-pass crawl (headless): `--resume --fast`.
 
-  **`npm run crawl:dados-empreendimento:headed`** — same zombie with **`--headed --fast`** so Chromium is visible.
+  **`npm run crawl:dados-empreendimento:headed`** — pure one-pass crawl with **`--headed --fast`** so Chromium is visible.
 
-  Extra flags after `--`, e.g. **`npm run crawl:dados-empreendimento -- --quiet`** or **`--refresh-options`**.
+  **`npm run crawl:dados-empreendimento:retry`** — retry loop (headless): `--resume --fast` on each pass; retries after **`CRAWL_RETRY_SECONDS`** (default `90`) until exit 0.
+
+  **`npm run crawl:dados-empreendimento:retry:headed`** — same retry loop with **`--headed --fast`** so Chromium is visible.
+
+  Extra flags after `--`, e.g. **`npm run crawl:dados-empreendimento -- --quiet`**, **`npm run crawl:dados-empreendimento:headed -- --refresh-options`**, or the matching `:retry` scripts.
 
 - **Checkpoint**: `data/resultados-leiloes-geracao/dados-do-empreendimento/crawl-state.json`. Delete it to reset progress (existing `by-empreendimento/*.json` still skipped unless **`--force`**).
 
