@@ -1,24 +1,31 @@
 #!/usr/bin/env bash
-# Re-run the Empreendimento crawl with --resume until it exits 0 (success).
-# On failure (network, parse error, etc.), wait and retry so an overnight run can self-heal.
+# Zombie crawl: run one Playwright pass, retry on non-zero until exit 0.
+#
+#   npm run crawl:dados-empreendimento
+#   npm run crawl:dados-empreendimento:headed
 #
 # Usage (from repo root):
 #   bash scripts/crawl-dados-empreendimento-until-done.sh
+#   bash scripts/crawl-dados-empreendimento-until-done.sh --headed --fast
 #   CRAWL_RETRY_SECONDS=120 bash scripts/crawl-dados-empreendimento-until-done.sh --quiet
 #
-# Extra args are passed after the fixed flags, e.g. --refresh-options
+# Extra CLI args are appended after fixed flags, e.g. --quiet --refresh-options --max=5
+#
+# Fresh checkpoint: delete
+#   data/resultados-leiloes-geracao/dados-do-empreendimento/crawl-state.json
 
 set -u
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+CRAWLER="src/pages/resultados-leiloes-geracao/reports/dados-do-empreendimento/crawlers/by-empreendimento.js"
 RETRY_SEC="${CRAWL_RETRY_SECONDS:-90}"
 
-fixed=(--resume --fast)
+fixed=(--resume --fast --settle-ms=3000)
 extra=("$@")
 
-until npm run crawl:dados-empreendimento -- "${fixed[@]}" "${extra[@]}"; do
+until node "$ROOT/$CRAWLER" "${fixed[@]}" "${extra[@]}"; do
   status=$?
   echo "[$(date -Iseconds)] crawl exited ${status} — sleeping ${RETRY_SEC}s, then retry (Ctrl+C to stop)" >&2
   sleep "$RETRY_SEC"

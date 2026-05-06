@@ -2,24 +2,29 @@
 /**
  * dados-do-empreendimento-by-empreendimento — Playwright visual crawler (Power BI iframe).
  *
- * Cursor IDE Browser MCP cannot automate cross-origin iframe UI; this script drives the embed.
+ * Flow: navigate → open Empreendimento slicer → merge visible labels into option list →
+ * if any visible row still needs JSON, select it and parse → else scroll list → repeat until
+ * discovery stagnates (virtual list). Cursor IDE Browser MCP can validate the outer shell only;
+ * the slicer lives in a cross-origin iframe and is driven here.
  *
  * CLI:
  *   node .../by-empreendimento.js [--only=Nome] [--max=N] [--force] [--screenshots]
- *   [--quiet] [--fast] [--settle-ms=N] [--resume] [--refresh-options]
+ *   [--quiet] [--fast] [--settle-ms=N] [--resume] [--refresh-options] [--dry-list]
  */
 
 const fs = require("fs");
 const path = require("path");
 const { chromium } = require("playwright");
 const { parseVisualCardText } = require("../parsers/visual-cards-parser.js");
-const { attachQueryEvidence } = require("./network-evidence.js");
 
 const SOURCE_PAGE = "resultados-leiloes-geracao";
 const SOURCE_URL =
   "https://portalrelatorios.aneel.gov.br/resultadosLeiloes/leiloesGeracaoPortugues#";
 const REPORT_ID = "dados-do-empreendimento";
 const FILTER_ID = "empreendimento";
+
+/** Fixed layout size so Power BI / portal match a desktop surface. */
+const VIEWPORT = Object.freeze({ width: 1920, height: 1080 });
 
 function ts() {
   return new Date().toISOString();
@@ -51,6 +56,8 @@ function parseArgs(argv) {
     settleMs: 6500,
     resume: false,
     refreshOptions: false,
+    dryList: false,
+    allowSmallList: false,
   };
   for (const a of argv.slice(2)) {
     if (a === "--force") out.force = true;
@@ -59,11 +66,14 @@ function parseArgs(argv) {
     else if (a === "--quiet") out.quiet = true;
     else if (a === "--resume") out.resume = true;
     else if (a === "--refresh-options") out.refreshOptions = true;
+    else if (a === "--dry-list") out.dryList = true;
+    else if (a === "--allow-small-list") out.allowSmallList = true;
     else if (a === "--fast") out.settleMs = 4200;
     else if (a.startsWith("--only=")) out.only = a.slice("--only=".length).trim();
-    else if (a.startsWith("--max="))
-      out.max = Math.max(1, Number.parseInt(a.slice("--max=".length), 10) || 1);
-    else if (a.startsWith("--settle-ms=")) {
+    else if (a.startsWith("--max=")) {
+      const n = Number.parseInt(a.slice("--max=".length), 10);
+      if (Number.isFinite(n) && n >= 0) out.max = n;
+    } else if (a.startsWith("--settle-ms=")) {
       const n = Number.parseInt(a.slice("--settle-ms=".length), 10);
       if (Number.isFinite(n) && n >= 0) out.settleMs = n;
     }
@@ -72,16 +82,9 @@ function parseArgs(argv) {
 }
 
 function outputDir() {
-  return path.join(
-    process.cwd(),
-    "data",
-    SOURCE_PAGE,
-    REPORT_ID,
-    "by-empreendimento"
-  );
+  return path.join(process.cwd(), "data", SOURCE_PAGE, REPORT_ID, "by-empreendimento");
 }
 
-/** Last-sync checkpoint for `--resume` (created if missing, updated after each item). */
 function crawlStatePath() {
   return path.join(process.cwd(), "data", SOURCE_PAGE, REPORT_ID, "crawl-state.json");
 }
@@ -97,7 +100,6 @@ function defaultCrawlState() {
     last_completed_at: null,
     updated_at: null,
     options_count: null,
-    /** Full sorted Empreendimento labels; filled after a dropdown scan; reused with --resume. */
     option_names: null,
     option_names_captured_at: null,
   };
@@ -131,28 +133,6 @@ function ensureCrawlStateFile(statePath) {
   }
 }
 
-function sliceAfterResume(names, state, quiet) {
-  const last = state.last_completed_name;
-  if (!last) {
-    log("Resume: no last_completed_* in crawl-state.json; using full list.", quiet);
-    return names;
-  }
-  const idx = names.findIndex((n) => n === last);
-  if (idx < 0) {
-    log(
-      `Resume: last “${last}” not found in current option list (${names.length} options); using full list.`,
-      quiet
-    );
-    return names;
-  }
-  const rest = names.slice(idx + 1);
-  log(
-    `Resume: last synced “${last}” (${state.last_completed_slug}); ${rest.length} item(s) left in list after that.`,
-    quiet
-  );
-  return rest;
-}
-
 function recordCrawlProgress(statePath, name, quiet) {
   const slug = slugify(name);
   writeCrawlState(statePath, {
@@ -160,10 +140,25 @@ function recordCrawlProgress(statePath, name, quiet) {
     last_completed_slug: slug,
     last_completed_at: new Date().toISOString(),
   });
-  log(
-    `  checkpoint → ${path.relative(process.cwd(), statePath)} (last=${slug})`,
-    quiet
-  );
+  log(`  checkpoint → ${path.relative(process.cwd(), statePath)} (last=${slug})`, quiet);
+}
+
+/** Persist merged sorted labels; logs when the crawled set grows. */
+function mergeOptionNamesIntoState(statePath, discovered, quiet) {
+  const prev = readCrawlState(statePath);
+  const prevArr = Array.isArray(prev.option_names) ? prev.option_names : [];
+  const prevSet = new Set(prevArr);
+  let added = 0;
+  for (const x of discovered) {
+    if (!prevSet.has(x)) added += 1;
+  }
+  const names = [...discovered].sort((a, b) => a.localeCompare(b, "pt-BR"));
+  writeCrawlState(statePath, {
+    option_names: names,
+    options_count: names.length,
+    option_names_captured_at: new Date().toISOString(),
+  });
+  if (added > 0) log(`  option list +${added} new → ${names.length} unique`, quiet);
 }
 
 function screenshotsDir() {
@@ -177,6 +172,20 @@ function screenshotsDir() {
   );
 }
 
+function jsonPathFor(outDir, name) {
+  return path.join(outDir, `${slugify(name)}.json`);
+}
+
+function jsonExists(outDir, name) {
+  return fs.existsSync(jsonPathFor(outDir, name));
+}
+
+function pendingExtractions(discovered, outDir, force) {
+  return [...discovered]
+    .sort((a, b) => a.localeCompare(b, "pt-BR"))
+    .filter((n) => force || !jsonExists(outDir, n));
+}
+
 async function getPowerBiFrame(page) {
   const deadline = Date.now() + 90000;
   while (Date.now() < deadline) {
@@ -187,6 +196,55 @@ async function getPowerBiFrame(page) {
   throw new Error("Power BI iframe not found");
 }
 
+/**
+ * Navigate to the portal, open the report tile, wait for the embed. Retries with a full
+ * refresh on transient load failures (network / incomplete DOM).
+ */
+async function openPortalAndReport(page, quiet, t0) {
+  const maxAttempts = Math.max(
+    1,
+    Number.parseInt(process.env.CRAWL_LOAD_MAX_ATTEMPTS ?? "5", 10) || 5
+  );
+  const retryPauseMs = Math.max(
+    500,
+    Number.parseInt(process.env.CRAWL_LOAD_RETRY_MS ?? "3000", 10) || 3000
+  );
+  let lastErr;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      log(
+        attempt === 1 ? "Opening portal…" : `Opening portal (retry ${attempt}/${maxAttempts})…`,
+        quiet
+      );
+      await page.goto(SOURCE_URL, { waitUntil: "domcontentloaded", timeout: 120000 });
+      await page.waitForTimeout(5000);
+
+      log("Selecting report “Dados do Empreendimento”…", quiet);
+      const tile = page.getByText("Dados do Empreendimento", { exact: true }).first();
+      await tile.waitFor({ state: "visible", timeout: 90000 });
+      await tile.click({ timeout: 30000 });
+      await page.waitForTimeout(12000);
+
+      log(`Report shell ready (${Date.now() - t0}ms since start)`, quiet);
+
+      const frame = await getPowerBiFrame(page);
+      log("Power BI iframe attached.", quiet);
+      return frame;
+    } catch (err) {
+      lastErr = err;
+      const msg = err instanceof Error ? err.message : String(err);
+      log(`Load/report error (attempt ${attempt}/${maxAttempts}): ${msg}`, quiet);
+      if (attempt >= maxAttempts) break;
+
+      log(`Waiting ${retryPauseMs}ms, then reloading portal…`, quiet);
+      await page.waitForTimeout(retryPauseMs);
+    }
+  }
+
+  throw lastErr instanceof Error ? lastErr : new Error(String(lastErr ?? "portal load failed"));
+}
+
 function empreendimentoSlicerDropdown(frame) {
   return frame
     .locator(".visual-slicer")
@@ -194,41 +252,93 @@ function empreendimentoSlicerDropdown(frame) {
     .locator('[data-testid="slicer-dropdown"]');
 }
 
-async function collectOptionNames(frame, page, quiet) {
-  log("Collecting Empreendimento filter options (scrolling list)…", quiet);
+async function tryClearSlicerSearch(frame, page) {
+  for (const re of [/Search/i, /Buscar/i, /Filtrar/i, /search/i, /Find/i]) {
+    const inp = frame.getByPlaceholder(re).first();
+    if ((await inp.count()) === 0) continue;
+    try {
+      await inp.fill("", { timeout: 2000 });
+      await page.waitForTimeout(250);
+      return true;
+    } catch (_) {}
+  }
+  const generic = frame.locator('input[type="search"]').first();
+  if ((await generic.count()) > 0) {
+    try {
+      await generic.fill("", { timeout: 1500 });
+      await page.waitForTimeout(200);
+      return true;
+    } catch (_) {}
+  }
+  return false;
+}
+
+async function wheelOnLocator(locator, page, deltaY) {
+  try {
+    await locator.hover({ timeout: 5000 });
+    await page.mouse.wheel(0, deltaY);
+  } catch (_) {}
+}
+
+async function mergeVisibleIntoDiscovered(frame, discovered) {
+  const texts = await frame.locator('[role="option"]').allTextContents();
+  let added = 0;
+  for (const t of texts) {
+    const s = t.trim();
+    if (!s) continue;
+    const before = discovered.size;
+    discovered.add(s);
+    if (discovered.size > before) added += 1;
+  }
+  return added;
+}
+
+async function getVisibleOptionTexts(frame) {
+  const texts = await frame.locator('[role="option"]').allTextContents();
+  return texts.map((t) => t.trim()).filter(Boolean);
+}
+
+async function openEmpreendimentoDropdown(frame, page) {
   await page.keyboard.press("Escape");
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(350);
   const dd = empreendimentoSlicerDropdown(frame);
   await dd.click();
   await page.waitForTimeout(900);
+}
 
-  const seen = new Set();
-  let stale = 0;
-  let scrolls = 0;
-  while (stale < 5) {
-    const texts = await frame.locator('[role="option"]').allTextContents();
-    const before = seen.size;
-    for (const t of texts) seen.add(t.trim());
-    if (seen.size === before) stale++;
-    else stale = 0;
+async function ensureListboxFocused(frame, page) {
+  const lb = frame.locator('[role="listbox"]').first();
+  if ((await lb.count()) === 0) return null;
+  await lb.waitFor({ state: "visible", timeout: 15000 }).catch(() => {});
+  await lb.click({ position: { x: 8, y: 14 }, timeout: 5000 }).catch(() => {});
+  return lb;
+}
 
-    if (seen.size !== before) {
-      log(`  options discovered so far: ${seen.size}`, quiet);
-    }
-
-    const lb = frame.locator('[role="listbox"]').first();
-    if ((await lb.count()) === 0) break;
+async function scrollListboxStep(lb, page, tick) {
+  const phase = tick % 5;
+  if (phase === 0 || phase === 3) {
     await lb.evaluate((el) => {
-      el.scrollTop += Math.max(100, Math.floor(el.clientHeight * 0.85));
+      el.scrollTop += Math.max(130, Math.floor(el.clientHeight * 0.92));
     });
-    scrolls += 1;
-    await page.waitForTimeout(400);
+  } else if (phase === 1) {
+    await lb.press("PageDown").catch(() => {});
+  } else if (phase === 4) {
+    await wheelOnLocator(lb, page, 1100);
+  } else {
+    await lb.press("PageDown").catch(() => {});
+    await wheelOnLocator(lb, page, 700);
   }
+}
 
-  log(`  done scrolling (${scrolls} steps), unique options: ${seen.size}`, quiet);
-  await page.keyboard.press("Escape");
-  await page.waitForTimeout(400);
-  return [...seen].sort((a, b) => a.localeCompare(b, "pt-BR"));
+async function reopenDropdownFromTop(frame, page, quiet) {
+  await openEmpreendimentoDropdown(frame, page);
+  await tryClearSlicerSearch(frame, page);
+  const lb = await ensureListboxFocused(frame, page);
+  if (lb) {
+    await lb.press("Home").catch(() => {});
+    await page.waitForTimeout(600);
+    log("  discovery: reopened slicer from top (virtual-list pass).", quiet);
+  }
 }
 
 async function selectEmpreendimento(frame, page, name, settleMs) {
@@ -244,6 +354,77 @@ async function selectEmpreendimento(frame, page, name, settleMs) {
   await page.waitForTimeout(450);
 }
 
+async function extractAndWrite({
+  frame,
+  page,
+  name,
+  index,
+  totalHint,
+  args,
+  out,
+  statePath,
+  shotsRoot,
+  quiet,
+}) {
+  const slug = slugify(name);
+  const dest = jsonPathFor(out, name);
+  const itemStart = Date.now();
+  log(`[${index}${totalHint}] selecting “${name}”…`, quiet);
+  await selectEmpreendimento(frame, page, name, args.settleMs);
+  log(`[${index}${totalHint}] extracting text + parsing (${Date.now() - itemStart}ms so far)…`, quiet);
+  const bodyText = await frame.locator("body").first().innerText();
+
+  const parsed = parseVisualCardText(bodyText, name);
+  if (parsed.error) {
+    const msg = `[${index}${totalHint}] Parse failed for “${name}” (${slug}): ${parsed.error}`;
+    log(msg, quiet);
+    console.error(msg);
+    console.error("(exit 1 — no JSON written, crawl-state.json not updated for this item)");
+    throw new Error(parsed.error);
+  }
+
+  log(`[${index}${totalHint}] parsed ${parsed.raw_cards?.length ?? 0} card row(s)`, quiet);
+
+  const payload = {
+    metadata: {
+      source_page: SOURCE_PAGE,
+      source_url: SOURCE_URL,
+      report: REPORT_ID,
+      filter: FILTER_ID,
+      filter_value: name,
+      extraction_method: "playwright-visual-crawler",
+      generated_at: new Date().toISOString(),
+      crawl_log: [`empreendimento=${name}`, `slug=${slug}`].join("\n"),
+    },
+    data: parsed.data,
+    raw_cards: parsed.raw_cards,
+  };
+
+  fs.writeFileSync(dest, JSON.stringify(payload, null, 2), "utf8");
+  const rel = path.relative(process.cwd(), dest);
+  log(`[${index}${totalHint}] wrote ${rel} (total ${Date.now() - itemStart}ms for this item)`, quiet);
+  recordCrawlProgress(statePath, name, quiet);
+
+  if (shotsRoot) {
+    const sp = path.join(shotsRoot, `${slug}.png`);
+    await page.screenshot({ path: sp, fullPage: true });
+  }
+  return rel;
+}
+
+function checkMinExpected(count, args, quiet) {
+  const raw = process.env.CRAWL_MIN_EXPECTED_OPTIONS;
+  const minExp = raw === undefined || raw === "" ? null : Number.parseInt(raw, 10);
+  if (minExp === null || !Number.isFinite(minExp) || minExp <= 0) return;
+  if (args.only || args.allowSmallList) return;
+  if (count < minExp) {
+    const msg = `FATAL: ${count} Empreendimento option(s) discovered; env CRAWL_MIN_EXPECTED_OPTIONS=${minExp}. Use --allow-small-list for dev or widen discovery (OPTION_DISCOVERY_* env).`;
+    log(msg, quiet);
+    console.error(msg);
+    process.exit(1);
+  }
+}
+
 async function main() {
   const args = parseArgs(process.argv);
   const out = outputDir();
@@ -252,167 +433,200 @@ async function main() {
   fs.mkdirSync(out, { recursive: true });
   ensureCrawlStateFile(statePath);
 
+  if (args.refreshOptions) {
+    writeCrawlState(statePath, {
+      option_names: [],
+      option_names_captured_at: null,
+      options_count: 0,
+    });
+    log("--refresh-options: cleared cached option_names; will rebuild during discovery.", quiet);
+  }
+
+  const discovered = new Set();
+  if (!args.refreshOptions) {
+    const snap = readCrawlState(statePath);
+    if (Array.isArray(snap.option_names)) {
+      for (const x of snap.option_names) discovered.add(x);
+      log(
+        `Starting with ${discovered.size} name(s) from crawl-state (merged as new rows appear).`,
+        quiet
+      );
+    }
+  }
+
   log(`Starting crawl → ${SOURCE_URL}`, quiet);
   log(`Output directory: ${out}`, quiet);
   log(`Sync state: ${statePath}`, quiet);
   log(`Post-select settle wait: ${args.settleMs}ms (use --fast or --settle-ms=N to tune)`, quiet);
 
-  const evidenceBucket = [];
   const t0 = Date.now();
   const browser = await chromium.launch({ headless: args.headless });
-  const context = await browser.newContext();
+  const context = await browser.newContext({ viewport: VIEWPORT });
   const page = await context.newPage();
   page.setDefaultTimeout(180000);
-  attachQueryEvidence(page, evidenceBucket);
 
-  log("Opening portal…", quiet);
-  await page.goto(SOURCE_URL, { waitUntil: "domcontentloaded" });
-  await page.waitForTimeout(5000);
-  log("Selecting report “Dados do Empreendimento”…", quiet);
-  await page.getByText("Dados do Empreendimento", { exact: true }).first().click();
-  await page.waitForTimeout(12000);
-  log(`Report shell ready (${Date.now() - t0}ms since start)`, quiet);
-
-  const frame = await getPowerBiFrame(page);
-  log("Power BI iframe attached.", quiet);
-
-  let names;
-  if (args.only) {
-    names = [args.only];
-    log(`Single item mode: --only=${args.only} (--resume ignored)`, quiet);
-  } else {
-    const snap = readCrawlState(statePath);
-    let usedCached = false;
-
-    if (
-      args.resume &&
-      Array.isArray(snap.option_names) &&
-      snap.option_names.length > 0 &&
-      !args.refreshOptions
-    ) {
-      names = [...snap.option_names];
-      usedCached = true;
-      const last = snap.last_completed_name;
-      if (last && !names.includes(last)) {
-        log(
-          `Cached list (${names.length} options) has no last_completed “${last}”; rescanning dropdown…`,
-          quiet
-        );
-        usedCached = false;
-      } else {
-        log(
-          `Using cached Empreendimento list (${names.length} options, saved ${snap.option_names_captured_at ?? "?"}). This avoids the long dropdown scroll. Use --refresh-options to rescan.`,
-          quiet
-        );
-      }
-    }
-
-    if (args.refreshOptions) {
-      log("--refresh-options: scanning dropdown (ignoring cached option list)…", quiet);
-    }
-
-    if (!usedCached) {
-      names = await collectOptionNames(frame, page, quiet);
-      writeCrawlState(statePath, {
-        options_count: names.length,
-        option_names: names,
-        option_names_captured_at: new Date().toISOString(),
-      });
-    }
-  }
-
-  if (!args.only && args.resume) {
-    const state = readCrawlState(statePath);
-    names = sliceAfterResume(names, state, quiet);
-  }
-
-  names = names.slice(0, args.max);
-  log(
-    `Will process ${names.length} item(s)${args.max !== Infinity ? ` (--max=${args.max})` : ""}${args.force ? " (--force: overwrite)" : ""}${args.resume && !args.only ? " (--resume)" : ""}`,
-    quiet
-  );
+  const frame = await openPortalAndReport(page, quiet, t0);
 
   const shotsRoot = args.screenshots ? screenshotsDir() : null;
   if (shotsRoot) fs.mkdirSync(shotsRoot, { recursive: true });
 
+  const STALE_LIMIT = Math.max(
+    8,
+    Number.parseInt(process.env.OPTION_DISCOVERY_STALE_SCROLLS ?? "72", 10) || 72
+  );
+  const MAX_REOPEN_PASSES = Math.max(
+    0,
+    Number.parseInt(process.env.OPTION_DISCOVERY_REOPEN_PASSES ?? "4", 10) || 4
+  );
+
   const summary = [];
-  let index = 0;
-  for (const name of names) {
-    index += 1;
-    const slug = slugify(name);
-    const dest = path.join(out, `${slug}.json`);
-    if (!args.force && fs.existsSync(dest)) {
-      log(`[${index}/${names.length}] skip (exists): ${slug}.json`, quiet);
-      summary.push(`skip existing ${slug}`);
-      recordCrawlProgress(statePath, name, quiet);
-      continue;
-    }
+  let processed = 0;
+  let stagnation = 0;
+  let reopenPass = 0;
+  let scrollTick = 0;
 
-    const itemStart = Date.now();
-    log(`[${index}/${names.length}] selecting “${name}”…`, quiet);
-    await selectEmpreendimento(frame, page, name, args.settleMs);
-    log(`[${index}/${names.length}] extracting text + parsing (${Date.now() - itemStart}ms so far)…`, quiet);
-    const bodyText = await frame.locator("body").first().innerText();
-
-    const parsed = parseVisualCardText(bodyText, name);
-    if (parsed.error) {
-      const msg = `[${index}/${names.length}] Parse failed for “${name}” (${slug}): ${parsed.error}`;
-      log(msg, quiet);
-      console.error(msg);
-      console.error(
-        "(exit 1 — no JSON written, crawl-state.json not updated for this item)"
+  try {
+    if (args.only) {
+      const dest = jsonPathFor(out, args.only);
+      if (!args.force && fs.existsSync(dest)) {
+        log(`--only: skip (exists): ${path.relative(process.cwd(), dest)}`, quiet);
+      } else {
+        const rel = await extractAndWrite({
+          frame,
+          page,
+          name: args.only,
+          index: 1,
+          totalHint: "/1",
+          args,
+          out,
+          statePath,
+          shotsRoot,
+          quiet,
+        });
+        summary.push(`wrote ${rel}`);
+        processed += 1;
+      }
+      discovered.add(args.only);
+      mergeOptionNamesIntoState(statePath, discovered, quiet);
+      checkMinExpected(discovered.size, args, quiet);
+    } else {
+      log(
+        `Incremental loop (stale_after=${STALE_LIMIT} scrolls, reopen_passes≤${MAX_REOPEN_PASSES}).`,
+        quiet
       );
-      await browser.close().catch(() => {});
-      process.exit(1);
+
+      while (processed < args.max) {
+        await openEmpreendimentoDropdown(frame, page);
+        await tryClearSlicerSearch(frame, page);
+        const lb = await ensureListboxFocused(frame, page);
+        if (!lb) {
+          console.error("Empreendimento slicer listbox not found.");
+          process.exit(1);
+        }
+
+        await mergeVisibleIntoDiscovered(frame, discovered);
+        mergeOptionNamesIntoState(statePath, discovered, quiet);
+
+        if (!args.dryList) {
+          const visible = await getVisibleOptionTexts(frame);
+          const visibleSet = new Set(visible);
+          const pendingSorted = pendingExtractions(discovered, out, args.force);
+          const next = pendingSorted.find((n) => visibleSet.has(n));
+          if (next) {
+            await page.keyboard.press("Escape");
+            await page.waitForTimeout(280);
+            const rel = await extractAndWrite({
+              frame,
+              page,
+              name: next,
+              index: processed + 1,
+              totalHint: args.max !== Infinity ? `/${args.max}` : "",
+              args,
+              out,
+              statePath,
+              shotsRoot,
+              quiet,
+            });
+            summary.push(`wrote ${rel}`);
+            processed += 1;
+            stagnation = 0;
+            reopenPass = 0;
+            continue;
+          }
+        }
+
+        const sizeBefore = discovered.size;
+        await scrollListboxStep(lb, page, scrollTick);
+        scrollTick += 1;
+        await page.waitForTimeout(args.fast ? 300 : 420);
+        await mergeVisibleIntoDiscovered(frame, discovered);
+        mergeOptionNamesIntoState(statePath, discovered, quiet);
+
+        await page.keyboard.press("Escape");
+        await page.waitForTimeout(280);
+
+        if (discovered.size === sizeBefore) stagnation += 1;
+        else stagnation = 0;
+
+        if (stagnation < STALE_LIMIT) continue;
+
+        const pending = pendingExtractions(discovered, out, args.force);
+
+        if (args.dryList) {
+          if (reopenPass < MAX_REOPEN_PASSES) {
+            reopenPass += 1;
+            stagnation = 0;
+            await reopenDropdownFromTop(frame, page, quiet);
+            await mergeVisibleIntoDiscovered(frame, discovered);
+            mergeOptionNamesIntoState(statePath, discovered, quiet);
+            await page.keyboard.press("Escape");
+            await page.waitForTimeout(280);
+            continue;
+          }
+          log(
+            `--dry-list: discovery stagnant after ${reopenPass} reopen pass(es); ${discovered.size} unique label(s).`,
+            quiet
+          );
+          break;
+        }
+
+        if (pending.length === 0) {
+          log(
+            `No pending JSON files and discovery stagnant — finished (${discovered.size} labels seen).`,
+            quiet
+          );
+          break;
+        }
+
+        if (reopenPass < MAX_REOPEN_PASSES) {
+          reopenPass += 1;
+          stagnation = 0;
+          log(
+            `Discovery stagnant with ${pending.length} pending extraction(s); reopen ${reopenPass}/${MAX_REOPEN_PASSES}…`,
+            quiet
+          );
+          await reopenDropdownFromTop(frame, page, quiet);
+          await mergeVisibleIntoDiscovered(frame, discovered);
+          mergeOptionNamesIntoState(statePath, discovered, quiet);
+          await page.keyboard.press("Escape");
+          await page.waitForTimeout(280);
+          continue;
+        }
+
+        const msg = `FATAL: discovery stagnant — ${pending.length} Empreendimento(s) still missing JSON (try OPTION_DISCOVERY_STALE_SCROLLS / OPTION_DISCOVERY_REOPEN_PASSES).`;
+        log(msg, quiet);
+        console.error(msg);
+        process.exit(1);
+      }
+
+      checkMinExpected(discovered.size, args, quiet);
     }
-
-    log(
-      `[${index}/${names.length}] parsed ${parsed.raw_cards?.length ?? 0} card row(s)`,
-      quiet
-    );
-
-    const payload = {
-      metadata: {
-        source_page: SOURCE_PAGE,
-        source_url: SOURCE_URL,
-        report: REPORT_ID,
-        filter: FILTER_ID,
-        filter_value: name,
-        extraction_method: "playwright-visual-crawler",
-        generated_at: new Date().toISOString(),
-        crawl_log: [
-          `run_items=${names.length}`,
-          `empreendimento=${name}`,
-          `slug=${slug}`,
-        ].join("\n"),
-      },
-      data: parsed.data,
-      raw_cards: parsed.raw_cards,
-      api_evidence: {
-        query_requests: evidenceBucket.slice(-80),
-      },
-    };
-
-    fs.writeFileSync(dest, JSON.stringify(payload, null, 2), "utf8");
-    const rel = path.relative(process.cwd(), dest);
-    log(
-      `[${index}/${names.length}] wrote ${rel} (total ${Date.now() - itemStart}ms for this item)`,
-      quiet
-    );
-    summary.push(`wrote ${rel}`);
-    recordCrawlProgress(statePath, name, quiet);
-
-    if (shotsRoot) {
-      const sp = path.join(shotsRoot, `${slug}.png`);
-      await page.screenshot({ path: sp, fullPage: true });
-    }
+  } finally {
+    await browser.close().catch(() => {});
   }
 
-  await browser.close();
   log(`Finished in ${Date.now() - t0}ms. Summary:\n${summary.join("\n")}`, quiet);
-  if (quiet) {
-    process.stdout.write(`${summary.join("\n")}\n`);
-  }
+  if (quiet) process.stdout.write(`${summary.join("\n")}\n`);
 }
 
 main().catch((err) => {

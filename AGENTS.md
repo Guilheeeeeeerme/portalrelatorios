@@ -2,20 +2,25 @@
 
 ## Scope
 
-- Visual crawl + JSON export for **Dados do Empreendimento** (Power BI embed):
+- **Dados do Empreendimento** (Power BI embed) — only these npm scripts exist:
 
-  `npm run crawl:dados-empreendimento`
+  **`npm run crawl:dados-empreendimento`** — zombie loop (headless): `--resume --fast --settle-ms=3000` on each pass; retries after **`CRAWL_RETRY_SECONDS`** (default `90`) until exit 0.
 
-- Overnight / self-healing (retries on failure, stops when crawl exits 0):
+  **`npm run crawl:dados-empreendimento:headed`** — same zombie with **`--headed --fast`** so Chromium is visible.
 
-  `npm run crawl:dados-empreendimento:until-done`
+  Extra flags after `--`, e.g. **`npm run crawl:dados-empreendimento -- --quiet`** or **`--refresh-options`**.
 
-  Optional: `CRAWL_RETRY_SECONDS=120 npm run crawl:dados-empreendimento:until-done -- --quiet`
+- **Checkpoint**: `data/resultados-leiloes-geracao/dados-do-empreendimento/crawl-state.json`. Delete it to reset progress (existing `by-empreendimento/*.json` still skipped unless **`--force`**).
 
-- Optional flags: `--only=Nome`, `--max=N`, `--force`, `--screenshots`, `--headed`, `--quiet`, `--fast`, `--settle-ms=N`, `--resume`, `--refresh-options`
-- Checkpoint file: `data/resultados-leiloes-geracao/dados-do-empreendimento/crawl-state.json` (created if missing; updated after each item / skip). It also stores `option_names` after a full dropdown scan so **`--resume` can skip the slow scroll**; use `--refresh-options` to rescan the slicer list.
+- Crawler logic (`by-empreendimento.js`): open Empreendimento slicer → merge visible labels into **`option_names`** → extract first visible row missing JSON → scroll virtual list → reopen-from-top passes when stalled.
 
-- Do not reintroduce a Fastify API or other unrelated servers unless the user asks.
+- Browser viewport is fixed at **1920×1080**. Initial portal/report load retries with **`page.goto` refresh** on failure (`CRAWL_LOAD_MAX_ATTEMPTS`, default `5`; `CRAWL_LOAD_RETRY_MS`, default `3000`).
+
+- Optional env: `OPTION_DISCOVERY_STALE_SCROLLS`, `OPTION_DISCOVERY_REOPEN_PASSES`, `CRAWL_MIN_EXPECTED_OPTIONS`, `--allow-small-list`.
+
+- Cursor **IDE Browser MCP**: outer ANEEL shell only; Power BI iframe is **Node Playwright** in `by-empreendimento.js`.
+
+- Do not reintroduce a Fastify API unless the user asks.
 
 - Never commit real `.env` secrets.
 
@@ -26,10 +31,6 @@ node --check src/pages/resultados-leiloes-geracao/reports/dados-do-empreendiment
 node --check src/pages/resultados-leiloes-geracao/reports/dados-do-empreendimento/parsers/visual-cards-parser.js
 ```
 
-## Browser automation
-
-- **Cursor IDE Browser MCP** helps with the outer ANEEL shell; the report lives in a **cross-origin Power BI iframe** and is driven by **Playwright** in `by-empreendimento.js`.
-
 ## Data
 
-- Generated files under `data/resultados-leiloes-geracao/dados-do-empreendimento/by-empreendimento/`. Preserve them unless the task is to regenerate.
+- Generated JSON: `data/resultados-leiloes-geracao/dados-do-empreendimento/by-empreendimento/`. Preserve unless regenerating.
